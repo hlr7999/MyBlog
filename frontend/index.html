@@ -8,7 +8,6 @@
 </head>
 <body>
   <div id="app"></div>
-  <!-- built files will be auto injected -->
 </body>
 <style>
 body {
@@ -19,4 +18,28 @@ body {
   margin: 0;
 }
 </style>
+
+<script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+<script>
+  L2Dwidget.init({
+    "model": {
+      jsonPath: "https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json",
+      "scale": 1,
+    },
+    "display": {
+      "position": "left",
+      "width": 100,
+      "height": 150,
+      "hOffset": 0,
+      "vOffset": 20,
+    },
+    "mobile": {
+      "show": true,
+      "scale": 0.5,
+    },
+    "react": {
+      "opacityDefault": 0.8,
+    }
+  });
+</script>
 </html>
