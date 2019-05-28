@@ -53,7 +53,7 @@
 </style>
 
 <script>
-import {loginServer} from '../api/login'
+// import {loginServer} from '../api/login'
 export default {
   data() {
     var checkPass = (rule, value, callback) => {
@@ -100,47 +100,47 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var that = this;
-          loginServer(JSON.stringify(this.ruleForm), function(res){
-            var code = res.data;
-            switch(code) {
-              case 1000:
-                that.$message.success({
-                  message: '注册成功',
-                  type: 'success',
-                  showClose: true,
-                  duration: 2000
-                });
-                that.$router.push({
-                  path: '/Login'
-                });
-                break;
-              case 1001:
-                that.$message.error({
-                  message: '用户名已存在',
-                  type: 'error',
-                  showClose: true,
-                  duration: 2000
-                });
-                break;
-              case 1002:
-                that.$message.error({
-                  message: '邮箱已注册',
-                  type: 'error',
-                  showClose: true,
-                  duration: 2000
-                });
-                break;
-              default:
-                that.$message.error({
-                  message: '注册失败',
-                  type: 'error',
-                  showClose: true,
-                  duration: 2000
-                });
-                that.$refs[formName].resetFields();
-                break;
-            }
-          });
+          // loginServer(JSON.stringify(this.ruleForm), function(res){
+          //   var code = res.data;
+          //   switch(code) {
+          //     case 1000:
+          //       that.$message.success({
+          //         message: '注册成功',
+          //         type: 'success',
+          //         showClose: true,
+          //         duration: 2000
+          //       });
+          //       that.$router.push({
+          //         path: '/Login'
+          //       });
+          //       break;
+          //     case 1001:
+          //       that.$message.error({
+          //         message: '用户名已存在',
+          //         type: 'error',
+          //         showClose: true,
+          //         duration: 2000
+          //       });
+          //       break;
+          //     case 1002:
+          //       that.$message.error({
+          //         message: '邮箱已注册',
+          //         type: 'error',
+          //         showClose: true,
+          //         duration: 2000
+          //       });
+          //       break;
+          //     default:
+          //       that.$message.error({
+          //         message: '注册失败',
+          //         type: 'error',
+          //         showClose: true,
+          //         duration: 2000
+          //       });
+          //       that.$refs[formName].resetFields();
+          //       break;
+          //   }
+          // });
         }
       });
     },

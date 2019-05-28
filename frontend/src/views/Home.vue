@@ -1,6 +1,6 @@
 <template>
 <div>
-  <blog-header></blog-header>
+  <blog-header :activeIndex="1"></blog-header>
 </div>
 </template>
 

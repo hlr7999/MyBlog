@@ -10,7 +10,7 @@
         <el-input v-model="ruleForm.usernameORemail" 
           placeholder="请输入用户名或邮箱" spellcheck="false"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="pass">
+      <el-form-item label="" prop="pass">  
         <el-input type='password' v-model="ruleForm.pass" 
           placeholder="请输入密码" spellcheck="false"></el-input>
       </el-form-item>
@@ -30,7 +30,7 @@
 .login .el-tabs {
   padding-top:20px;
   margin-bottom: 50px;
-  font-family: 'Hiragino Sans GB'
+  font-family: 'Hiragino Sans GB';
 }
 
 .login .el-tabs .el-tabs__item {
@@ -59,7 +59,7 @@
 </style>
 
 <script>
-import {loginServer} from '../api/login'
+import { User } from '../api/user'
 export default {
   data() {
     return {
@@ -80,47 +80,42 @@ export default {
       },
       activeName: "second",
       rememberMe: false
-    };
+    }
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          var that = this;
-          loginServer(JSON.stringify(this.ruleForm), function(res){
-            var code = res.data;
-            switch(code) {
-              case 1000:
-                that.$message({
+          User.login(this.ruleForm.usernameORemail.trim(), this.ruleForm.pass.trim())
+            .then(() => {
+              this.$message({
                   message: '登录成功',
                   type: 'success',
                   showClose: true,
                   duration: 1000
-                });
-                that.$router.push({
+                })
+                this.$router.push({
                   path: '/'
-                });
-                break;
-              default:
-                that.$message.error({
+                })
+            })
+            .catch(() => {
+              this.$message.error({
                 message: '用户名或密码错误',
                 type: 'error',
                 showClose: true,
                 duration: 2000
-              });
-              that.$refs[formName].resetFields();
-            }
-          });
+              })
+            })
         }
-      });
+      })
     },
     handleClick(tab, event) {
       if (tab.name === 'first') {
         this.$router.push({
           path: '/Register'
-        });
+        })
       }
     }
   }
-};
+}
 </script>

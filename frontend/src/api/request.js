@@ -1,27 +1,26 @@
-export class ESGClient {
+export class Client {
   constructor(authToken = null) {
     this._authToken = authToken
   }
 
   get(url) {
-    return new ESGRequest("GET", url, this._authToken)
+    return new Request("GET", url, this._authToken)
   }
 
   post(url) {
-    return new ESGRequest("POST", url, this._authToken)
+    return new Request("POST", url, this._authToken)
   }
 
   put(url) {
-    return new ESGRequest("PUT", url, this._authToken)
+    return new Request("PUT", url, this._authToken)
   }
 
   delete(url) {
-    return new ESGRequest("DELETE", url, this._authToken)
+    return new Request("DELETE", url, this._authToken)
   }
 }
 
-// ESGRequest is the real class packing all about a request.
-export class ESGRequest {
+export class Request {
   constructor(method, url, authToken = null) {
     this._method = method
     this._url = url
