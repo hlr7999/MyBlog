@@ -26,12 +26,14 @@
 <style>
 .header {
   position: fixed;
+  top: 0;
+  left: 0;
   margin: 0;
   width: 100%;
   background-color: rgba(40, 42, 44, 0.6);
   color: white;
-  height: 60px;
-  line-height: 60px;
+  height: 50px;
+  line-height: 50px;
   min-width: 900px;
 }
 

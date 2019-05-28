@@ -1,34 +1,37 @@
 <template>
-<div class="login" v-loading.fullscreen.lock="this.$store.state.loading">
-  <el-card shadow="always">
-    <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
-      <el-tab-pane label="注册" name="first"></el-tab-pane>
-      <el-tab-pane label="登录" name="second"></el-tab-pane>
-    </el-tabs>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
-      <el-form-item label="" prop="usernameORemail">
-        <el-input v-model="ruleForm.usernameORemail" 
-          placeholder="请输入用户名或邮箱" spellcheck="false"></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="pass">  
-        <el-input type='password' v-model="ruleForm.pass" 
-          placeholder="请输入密码" spellcheck="false"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-        <a href="javascript:void(0)" class="forget">忘记密码?</a>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+<div>
+  <blog-header></blog-header>
+  <div class="login" v-loading.fullscreen.lock="this.$store.state.loading">
+    <el-card shadow="always">
+      <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
+        <el-tab-pane label="注册" name="first"></el-tab-pane>
+        <el-tab-pane label="登录" name="second"></el-tab-pane>
+      </el-tabs>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+        <el-form-item label="" prop="usernameORemail">
+          <el-input v-model="ruleForm.usernameORemail" 
+            placeholder="请输入用户名或邮箱" spellcheck="false"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="pass">  
+          <el-input type='password' v-model="ruleForm.pass" 
+            placeholder="请输入密码" spellcheck="false"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+          <a href="javascript:void(0)" class="forget">忘记密码?</a>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </div>
 </template>
 
 <style>
 .login .el-tabs {
-  padding-top:20px;
+  padding-top: 10px;
   margin-bottom: 50px;
   font-family: 'Hiragino Sans GB';
 }
@@ -38,7 +41,7 @@
 }
 
 .login .el-card {
-  margin: 60px auto;
+  margin: 120px auto;
   max-width: 320px;
   border-width: 1.5px;
 }
@@ -60,7 +63,13 @@
 
 <script>
 import { User } from '../api/user'
+import header from "../components/header.vue"
+
 export default {
+  name: "login",
+  components: {
+    'blog-header': header
+  },
   data() {
     return {
       ruleForm: {
