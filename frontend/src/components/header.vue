@@ -1,10 +1,10 @@
 <template>
 <div class="header">
   <el-row :gutter="20" type="flex" justify="center">
-    <el-col :span="5" class="logo" @click="homeBtn">
+    <el-col :span="5" class="headerLogo" @click="homeBtn">
       <i class="el-icon-watermelon"></i>MyBlog</el-col>
     <el-col :span="14">
-      <el-row :gutter="3" type="flex" justify="start" class="menu">
+      <el-row :gutter="3" type="flex" justify="start" class="headerMenu">
         <el-col :span="3">
           <div :class="activeIndex == 1 ? 'active' : ''" @click="homeBtn">
             <i class="el-icon-s-home"></i>首页</div>
@@ -23,7 +23,7 @@
         </el-col>
       </el-row>
     </el-col>
-    <el-col :span="4"><div class="login" @click="loginBtn">
+    <el-col :span="4"><div class="headerLogin" @click="loginBtn">
       <i class="el-icon-user-solid"></i>登录|注册</div></el-col>
   </el-row>
 </div>
@@ -52,28 +52,29 @@
   user-select:none;
 }
 
-.logo {
+.headerLogo {
   font-size: 30px;
+  color: antiquewhite;
   cursor: pointer;
 }
 
-.menu .el-col:hover div,
-.menu .el-col:hover a,
+.headerMenu .el-col:hover div,
+.headerMenu .el-col:hover a,
 .active {
   background-color: #48456C;
   color: gray;
 }
 
-.menu .el-col {
+.headerMenu .el-col {
   cursor: pointer;
 }
 
-.menu .el-col a {
+.headerMenu .el-col a {
   color: white;
   text-decoration: none;
 }
 
-.login {
+.headerLogin {
   cursor: pointer;
 }
 </style>
