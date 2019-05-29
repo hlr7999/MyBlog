@@ -1,29 +1,29 @@
 <template>
 <div class="header">
   <el-row :gutter="20" type="flex" justify="center">
-    <el-col :span="5" class="headerLogo" @click="homeBtn">
+    <el-col :lg="5" :md="5" :sm="6" :xs="6" class="headerLogo" @click="homeBtn">
       <i class="el-icon-watermelon"></i>MyBlog</el-col>
-    <el-col :span="14">
+    <el-col :lg="15" :md="15" :sm="16" :xs="13">
       <el-row :gutter="3" type="flex" justify="start" class="headerMenu">
-        <el-col :span="3">
+        <el-col :lg="3" :md="3" :sm="4">
           <div :class="activeIndex == 1 ? 'active' : ''" @click="homeBtn">
             <i class="el-icon-s-home"></i>首页</div>
         </el-col>
-        <el-col :span="3">
+        <el-col :lg="3" :md="3" :sm="4">
           <div :class="activeIndex == 2 ? 'active' : ''" @click="classBtn">
             <i class="el-icon-s-grid"></i>分类</div>
         </el-col>
-        <el-col :span="3">
+        <el-col :lg="3" :md="4" :sm="4">
           <div :class="activeIndex == 3 ? 'active' : ''" @click="aboutBtn">
             <i class="el-icon-s-custom"></i>关于我</div>
         </el-col>
-        <el-col :span="4">
+        <el-col :lg="3" :md="4" :sm="5">
           <div :class="activeIndex == 4 ? 'active' : ''" @click="startBtn">
             <i class="el-icon-s-promotion"></i>开始场景</div>
         </el-col>
       </el-row>
     </el-col>
-    <el-col :span="4"><div class="headerLogin" @click="loginBtn">
+    <el-col :lg="4" :md="4" :sm="4" :xs="5"><div class="headerLogin" @click="loginBtn">
       <i class="el-icon-user-solid"></i>登录|注册</div></el-col>
   </el-row>
 </div>
@@ -50,6 +50,7 @@
   -webkit-user-select:none; 
   -ms-user-select:none; 
   user-select:none;
+  z-index: 10;
 }
 
 .headerLogo {
