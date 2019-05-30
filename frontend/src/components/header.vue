@@ -10,8 +10,19 @@
             <i class="el-icon-s-home"></i>首页</div>
         </el-col>
         <el-col :lg="3" :md="3" :sm="4">
-          <div :class="activeIndex == 2 ? 'active' : ''" @click="classBtn">
-            <i class="el-icon-s-grid"></i>分类</div>
+          <div :class="activeIndex == 2 ? 'active' : ''">
+            <el-dropdown :showTimeout="100" @command="classSelect" placement="bottom-start">
+              <div class="el-dropdown-link">
+                <i class="el-icon-s-grid"></i>分类<i class="el-icon-arrow-down el-icon--right"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item 
+                  v-for="c in classList"
+                  :key="c.id"
+                  :command="c.id">{{c.name}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </el-col>
         <el-col :lg="3" :md="4" :sm="4">
           <div :class="activeIndex == 3 ? 'active' : ''" @click="aboutBtn">
@@ -42,6 +53,7 @@
   line-height: 50px;
   min-width: 750px;
 	font-family: Arial, sans-serif;
+  font-size: 16px;
   font-weight: 700;
   /* forbid select text */
   -moz-user-select: none; 
@@ -53,6 +65,37 @@
   z-index: 10;
 }
 
+.headerMenu .el-col .el-dropdown {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.headerMenu .el-col .el-dropdown .el-dropdown-link {
+  width: 100%;
+  height: 100%;
+}
+
+ul.el-dropdown-menu {
+  background-color: rgba(40, 42, 44, 0.6);
+  border: 0;
+  border-radius: 0%;
+  margin: 0;
+  padding: 0;
+  top: 38px !important;
+}
+
+ul.el-dropdown-menu .popper__arrow {
+  display: none;
+}
+
+ul.el-dropdown-menu li { 
+  color: white !important;
+  font-size: 16px !important;
+}
+
 .headerLogo {
   font-size: 30px;
   color: antiquewhite;
@@ -61,9 +104,10 @@
 
 .headerMenu .el-col:hover div,
 .headerMenu .el-col:hover a,
+ul.el-dropdown-menu li:hover,
 .active {
-  background-color: #48456C;
-  color: gray;
+  background-color: #48456C !important;
+  color: gray !important;
 }
 
 .headerMenu .el-col {
@@ -84,6 +128,16 @@
 export default {
   data() {
     return {
+      classList: [{
+        id: 0,
+        name: "Vue.js"
+      }, {
+        id: 1,
+        name: "生活随笔"
+      }, {
+        id: 2,
+        name: "Golang"
+      }]
     };
   },
 
@@ -97,9 +151,9 @@ export default {
         path: '/'
       });
     },
-    classBtn() {
+    classSelect(command) {
       this.$router.push ({
-        path: '/class'
+        path: `/class?id=${command}`
       });
     },
     aboutBtn() {
@@ -114,6 +168,9 @@ export default {
       this.$router.push ({
         path: '/Login'
       });
+    },
+    getData() {
+
     }
   }
 }
