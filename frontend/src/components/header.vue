@@ -130,13 +130,13 @@ export default {
     return {
       classList: [{
         id: 0,
-        name: "Vue.js"
+        name: "技术分享"
       }, {
         id: 1,
         name: "生活随笔"
       }, {
         id: 2,
-        name: "Golang"
+        name: "读书分享"
       }]
     };
   },
@@ -153,12 +153,12 @@ export default {
     },
     classSelect(command) {
       this.$router.push ({
-        path: `/class?id=${command}`
+        path: `/Class/${command}`
       });
     },
     aboutBtn() {
       this.$router.push ({
-        path: '/aboutme'
+        path: '/Aboutme'
       });
     },
     startBtn() {

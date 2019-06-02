@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Class from '@/views/Class'
 
 Vue.use(Router)
 
@@ -22,6 +23,16 @@ export default new Router({
       path: '/Register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/Class/:class_id',
+      name: 'Class',
+      component: Class
+    },
+    {
+      path: '/Class/:class_id/:son_class_id',
+      name: 'Class',
+      component: Class
     }
   ]
 })

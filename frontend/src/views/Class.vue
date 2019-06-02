@@ -1,14 +1,25 @@
 <template>
 <div>
-  <blog-header :activeIndex="1"></blog-header>
+  <blog-header :activeIndex="2"></blog-header>
   <div class="container">
-    
+    <div class="classTitle">
+      <div class="classLabel" >
+        <a :href="'#/Class/'+class_id">{{class_name}}</a>
+      </div>
+      <ul v-if="sonclassList" class="sonclassTitle" >
+        <li v-for="(item,index) in sonclassList" :key="index">
+          <a :href="'#/Class/'+class_id+'/'+item.id" 
+            :class="item.id == son_class_id ? 'active' : ''">{{item.name}}</a>
+        </li>
+      </ul>
+    </div>
+
     <div class="articleItem" v-for="article in articles" :key="article.id">
       <article-card :articleInfo="article"></article-card>
     </div>
     <div class="viewmore">
-      <a v-show="hasMore" class="tcolors-bg" href="javascript:void(0);" @click="viewMoreFun">点击加载更多</a>
-      <a v-show="!hasMore" class="tcolors-bg" href="javascript:void(0);">暂无更多数据</a>
+      <a v-show="hasMore" class="viewMoreBtn" href="javascript:void(0);" @click="viewMoreFun">点击加载更多</a>
+      <a v-show="!hasMore" class="viewMoreBtn" href="javascript:void(0);">暂无更多数据</a>
     </div>
   </div>
 </div>
@@ -26,6 +37,14 @@ export default {
   },
   data() {
     return {
+      sonclassList: [{
+          id: "00",
+          name: "Vue.js"
+        },{
+          id: "11",
+          name: "Golang"
+        }
+      ],
       articles: [{
         id: "fuck1",
         title: "Vue.js搭建博客",
@@ -37,7 +56,7 @@ export default {
         like_count: 77,
         collect_count: 77,
         class_id: 0,
-        class_name: "vue",
+        class_name: "Vue.js",
         description: "Vue.js搭建博客",
         image: "/static/img/vuelogo.jpg"
       },{
@@ -51,84 +70,78 @@ export default {
         like_count: 77,
         collect_count: 77,
         class_id: 0,
-        class_name: "vue",
+        class_name: "Vue.js",
         description: "Vue.js搭建博客",
         image: "/static/img/vuelogo.jpg"
       }],
-      hasMore: true
+      hasMore: true,
+      class_id: "0",
+      son_class_id: "0",
+      class_name: ""
     }
   },
+
   methods: {
+    getData() {
+      this.class_id = this.$route.params.class_id
+      this.son_class_id = this.$route.params.son_class_id
+      this.class_name = "技术分享"
+    },
+
     viewMoreFun() {
 
     }
+  },
+
+  mounted () {
+    this.getData()
+  },
+
+  watch: {
+    '$route': 'getData'
   }
 }
 </script>
 
 <style>
-a {
-  text-decoration: none;
-  color: black;
-}
-
-.container {
-  max-width: 50%;
-  margin:100px auto;
-  padding:0 10px;
-  transition: all 0.5s ease-out;
-  font-size: 15px;
-}
-
-.articleItem {
-  margin: 10px auto;
-}
-
-.viewmore{
-  text-align: center;
-  width:100%;
-}
-
-.viewmore a{
-  background-color: #97dffd;
-  text-decoration: none;
+.classTitle {
+  margin-bottom: 40px;
+  position: relative;
   border-radius: 5px;
-  text-align: center;
-  font-size: 16px;
+  background: #fff;
+  padding: 15px;
+  text-align: left;
+}
+
+.sonclassTitle {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sonclassTitle li {
+  display: inline-block;
+}
+
+.sonclassTitle li a {
+  display: inline-block;
+  padding: 3px 7px;
+  margin: 5px 10px;
   color:#fff;
-  height:30px;
-  line-height: 30px;
-  display: block;
+  border-radius: 4px;
+  background: #64609E;
+  border: 1px solid #64609E;
+  transition: transform 0.2s linear;
+  -webkit-transition: transform 0.2s linear;
 }
 
-.tcolors-bg{
-  background: #97dffd;
-  transition: all .3s ease-in-out;
+.sonclassTitle li a:hover{
+  transform: translate(0,-3px);
+  -webkit-transform: translate(0,-3px);
 }
 
-.tcolors-bg:hover{
-  background: #48456D;
+.sonclassTitle li a.active{
+  background-color: #fff !important;
+  color:#64609E !important;
 }
-
-@media screen and (max-width:1400px){
-  .container {
-    max-width: 60%!important;
-    margin:100px auto;
-  }
-}
-
-@media screen and (max-width:1000px){
-  .container{
-    max-width: 80%!important;
-    margin:100px auto;
-  }
-}
-
-@media screen and (max-width:800px){
-  .container{
-    max-width: 100%!important;
-    margin:100px auto;
-  }
-}
-
 </style>

@@ -18,4 +18,103 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.classLabel {
+  border-color:#97dffd;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  background-color: #97dffd;
+  margin:5px 0 15px 2px;
+  font-size: 16px;
+  text-align: left;
+  position: relative;
+  left:-33px;
+  border-radius: 0 4px 4px 0;
+  padding:7px 11.2px 7px 32px;
+  display: inline-block;
+  color:#fff;
+}
+
+.classLabel ::after {
+  position: absolute;
+  content: '';
+  top:100%;
+  left:0;
+  border-top: 0 solid transparent;
+  border-right-width:1em;
+  border-right-color:#48456D;
+  border-right-style:solid;
+  border-bottom: 1em solid transparent;
+  border-left: 0 solid transparent;
+  width:0;
+  height:0;
+}
+
+.classLabel a {
+  color:#fff;
+  line-height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.container {
+  max-width: 45%;
+  margin:100px auto;
+  padding:0 10px;
+  transition: all 0.5s ease-out;
+  font-size: 16px;
+}
+
+.articleItem {
+  margin: 10px auto;
+}
+
+.viewmore {
+  text-align: center;
+  width:100%;
+}
+
+.viewmore a {
+  background-color: #97dffd;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+  color:#fff;
+  height:30px;
+  line-height: 30px;
+  display: block;
+}
+
+.viewMoreBtn {
+  background: #97dffd;
+  transition: all .3s ease-in-out;
+}
+
+.viewMoreBtn:hover {
+  background: #48456D;
+}
+
+@media screen and (max-width:1400px) {
+  .container {
+    max-width: 60%!important;
+    margin:100px auto;
+  }
+}
+
+@media screen and (max-width:1000px) {
+  .container{
+    max-width: 80%!important;
+    margin:100px auto;
+  }
+}
+
+@media screen and (max-width:800px) {
+  .container{
+    max-width: 100%!important;
+    margin:100px auto;
+  }
+}
 </style>
