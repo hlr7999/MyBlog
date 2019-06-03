@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       articles: [{
-        id: "fuck1",
+        id: "0",
         title: "Vue.js搭建博客",
         year: 2019,
         month: 5,
@@ -40,7 +40,7 @@ export default {
         description: "Vue.js搭建博客",
         image: "/static/img/vuelogo.jpg"
       },{
-        id: "fuck2",
+        id: "1",
         title: "Vue.js搭建博客",
         year: 2019,
         month: 5,

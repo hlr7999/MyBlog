@@ -9,7 +9,7 @@
           <div :class="activeIndex == 1 ? 'active' : ''" @click="homeBtn">
             <i class="el-icon-s-home"></i>首页</div>
         </el-col>
-        <el-col :lg="3" :md="3" :sm="4">
+        <el-col :lg="3" :md="4" :sm="4">
           <div :class="activeIndex == 2 ? 'active' : ''">
             <el-dropdown :showTimeout="100" @command="classSelect" placement="bottom-start">
               <div class="el-dropdown-link">
@@ -24,7 +24,7 @@
             </el-dropdown>
           </div>
         </el-col>
-        <el-col :lg="3" :md="4" :sm="4">
+        <el-col :lg="3" :md="3" :sm="4">
           <div :class="activeIndex == 3 ? 'active' : ''" @click="aboutBtn">
             <i class="el-icon-s-custom"></i>关于我</div>
         </el-col>

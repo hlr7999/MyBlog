@@ -65,14 +65,6 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[ext]?v=[hash:7]')
         }
       },
-      // {
-      //   test: /\.less$/,
-      //   use: [
-      //     'vue-style-loader',
-      //     'css-loader',
-      //     'less-loader'
-      //   ]
-      // }
     ]
   },
   node: {
