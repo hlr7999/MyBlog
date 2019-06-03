@@ -12,13 +12,12 @@
           <el-input v-model="ruleForm.usernameORemail" 
             placeholder="请输入用户名或邮箱" spellcheck="false"></el-input>
         </el-form-item>
-        <el-form-item label="" prop="pass">  
+        <el-form-item label="" prop="pass" class="passwordItem">  
           <el-input type='password' v-model="ruleForm.pass" 
             placeholder="请输入密码" spellcheck="false"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-          <a href="javascript:void(0)" class="forget">忘记密码?</a>
+        <el-form-item class="forget">
+          <a href="javascript:void(0)">忘记密码?</a>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -55,9 +54,19 @@
   margin-left: 10px!important;
 }
 
-.el-form .el-form-item .forget {
-  float: right!important;
+.el-form .el-form-item.passwordItem {
+  margin-bottom: 0;
+}
+
+.el-form .el-form-item.forget {
+  text-align: right!important;
   margin-right: 10px!important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.el-form .el-form-item.forget a {
+  color: gray;
 }
 </style>
 
