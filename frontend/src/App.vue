@@ -129,11 +129,6 @@ a {
   font-size: 14px;
 }
 
-.a-articleInfo section p {
-  line-height: 24px;
-  margin:10px 0;
-}
-
 .a-articleInfo header h2 .el-rate,
 .rateBox{
   display:inline-block;

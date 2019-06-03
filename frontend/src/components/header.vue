@@ -1,8 +1,10 @@
 <template>
 <div class="header">
   <el-row :gutter="20" type="flex" justify="center">
-    <el-col :lg="5" :md="5" :sm="6" :xs="6" class="headerLogo" @click="homeBtn">
-      <i class="el-icon-watermelon"></i>MyBlog</el-col>
+    <el-col :lg="5" :md="5" :sm="6" :xs="6" class="headerLogo">
+      <div  @click="homeBtn">
+        <i class="el-icon-watermelon"></i>MyBlog</div>
+      </el-col>
     <el-col :lg="15" :md="15" :sm="16" :xs="13">
       <el-row :gutter="3" type="flex" justify="start" class="headerMenu">
         <el-col :lg="3" :md="3" :sm="4">
@@ -62,7 +64,7 @@
   -webkit-user-select:none; 
   -ms-user-select:none; 
   user-select:none;
-  z-index: 10;
+  z-index: 10080;
 }
 
 .headerMenu .el-col .el-dropdown {

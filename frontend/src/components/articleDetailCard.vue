@@ -29,7 +29,15 @@
       </div>
     </header>
 
-    <div class="article-content" v-html="articleInfo.content"></div>
+    <mavon-editor
+      :value = "articleInfo.content"
+      :boxShadow = "false"
+      :subfield = "false"
+      defaultOpen = "preview"
+      :toolbarsFlag	= "false"
+      :ishljs = "true"
+      code-style = "github-gist"
+    />
 
     <div class="likeColBox">
       <div class="likeBox" @click="likecollectHandle(1)">
@@ -97,8 +105,14 @@ export default {
         class_name: "Vue.js",
         description: "Vue.js搭建博客",
         image: "/static/img/vuelogo.jpg",
-        content: ""
+        content: "# Not found"
       }
+
+      const axios = require('axios')
+      axios.get('http://localhost:10080/markdown')
+        .then(res => {
+          this.articleInfo.content = res.data
+        })
     },
 
     // likecollectHandle: function(islike) {
@@ -200,6 +214,23 @@ export default {
   border-radius: 35px;
   border: 1px solid #e26d6d;
   cursor: pointer;
+}
+
+.markdown-body {
+  min-width: 0 !important;
+}
+
+.markdown-body .v-note-panel {
+  border: 0 !important;
+}
+
+.markdown-body .v-note-panel .v-show-content {
+  background-color: #fff !important;
+}
+
+.markdown-body .highlight pre, 
+.markdown-body pre {
+  padding: 3px !important;
 }
 
 </style>
