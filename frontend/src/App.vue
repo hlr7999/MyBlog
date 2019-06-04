@@ -214,7 +214,14 @@ a {
   }
 }
 
-@media screen and (max-width:1100px) {
+@media screen and (max-width:1200px) {
+  .container{
+    max-width: 70%!important;
+    margin:100px auto;
+  }
+}
+
+@media screen and (max-width:1000px) {
   .container{
     max-width: 80%!important;
     margin:100px auto;

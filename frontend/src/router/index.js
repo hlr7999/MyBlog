@@ -6,6 +6,7 @@ import Register from '@/views/Register'
 import Class from '@/views/Class'
 import Article from '@/views/Article'
 import AboutMe from '@/views/AboutMe'
+import ArticleEdit from '@/views/ArticleEdit'
 
 Vue.use(Router)
 
@@ -45,6 +46,16 @@ export default new Router({
       path: '/AboutMe',
       name: 'AboutMe',
       component: AboutMe
+    },
+    {
+      path: '/NewArticle',
+      name: 'ArticleEdit',
+      component: ArticleEdit
+    },
+    {
+      path: '/ModifyArticle/:article_id',
+      name: 'ArticleEdit',
+      component: ArticleEdit
     }
   ]
 })

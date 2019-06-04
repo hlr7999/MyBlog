@@ -131,13 +131,13 @@ export default {
   data() {
     return {
       classList: [{
-        id: 0,
+        id: "0",
         name: "技术分享"
       }, {
-        id: 1,
+        id: "1",
         name: "生活随笔"
       }, {
-        id: 2,
+        id: "2",
         name: "读书分享"
       }]
     };

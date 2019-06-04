@@ -18,7 +18,6 @@ import header from "../components/header.vue"
 import articleCard from "../components/articleCard.vue" 
 
 export default {
-  name: 'home',
   components: {
     'blog-header': header,
     'article-card': articleCard
