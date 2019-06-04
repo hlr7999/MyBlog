@@ -19,6 +19,10 @@ export default {
   color: #2c3e50;
 }
 
+ul {
+  list-style: none;
+}
+
 .classLabel {
   border-color:#97dffd;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
@@ -176,9 +180,11 @@ a {
 .viewmore {
   text-align: center;
   width:100%;
+  user-select:none;
 }
 
-.viewmore a {
+.viewmore a,
+.viewmore h1 {
   background-color: #97dffd;
   text-decoration: none;
   border-radius: 5px;
@@ -188,11 +194,13 @@ a {
   height:30px;
   line-height: 30px;
   display: block;
+  font-weight: normal;
 }
 
 .viewMoreBtn {
   background: #97dffd;
   transition: all .3s ease-in-out;
+  cursor: pointer;
 }
 
 .viewMoreBtn:hover {
@@ -206,7 +214,7 @@ a {
   }
 }
 
-@media screen and (max-width:1000px) {
+@media screen and (max-width:1100px) {
   .container{
     max-width: 80%!important;
     margin:100px auto;
