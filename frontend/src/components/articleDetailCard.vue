@@ -218,20 +218,20 @@ export default {
   cursor: pointer;
 }
 
-.markdown-body {
+.detailArticleBox .markdown-body {
   min-width: 0 !important;
 }
 
-.markdown-body .v-note-panel {
+.detailArticleBox .markdown-body .v-note-panel {
   border: 0 !important;
 }
 
-.markdown-body .v-note-panel .v-show-content {
+.detailArticleBox .markdown-body .v-note-panel .v-show-content {
   background-color: #fff !important;
 }
 
-.markdown-body .highlight pre, 
-.markdown-body pre {
+.detailArticleBox .markdown-body .highlight pre, 
+.detailArticleBox .markdown-body pre {
   padding: 3px !important;
 }
 

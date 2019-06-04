@@ -139,7 +139,7 @@ export default {
     },
 
     newFirstClass() {
-      
+
     },
 
     newSecondClass() {
@@ -200,19 +200,19 @@ export default {
   width: 100%;
 }
 
-.markdown-body .v-note-panel {
+.editBox .markdown-body .v-note-panel {
   border: 1px solid #e0e0e0;
 }
 
-.submit {
+.editBox .submit {
   background-color: #97dffd;
 }
 
-.cancel {
+.editBox .cancel {
   background-color: #c0c4cc;
 }
 
-.newClass {
+.editBox .newClass {
   color: #67c23a;
   margin-left: 15px;
 }
