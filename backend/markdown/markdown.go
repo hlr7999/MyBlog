@@ -15,12 +15,24 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.Logger())
-	e.GET("/markdown", GetMarkdown)
+	e.GET("/article", GetArticle)
+	e.GET("/aboutMe", GetAboutMe)
 	e.Logger.Fatal(e.Start(addr))
 }
 
-func GetMarkdown(c echo.Context) (err error) {
-	data, err := ioutil.ReadFile("G:/Projects/MyBlog/frontend/test.md")
+func GetArticle(c echo.Context) (err error) {
+	data, err := ioutil.ReadFile("G:/Projects/MyBlog/backend/markdown/article.md")
+    if err != nil {
+        return err
+	}
+	dataStr := string(data)
+	
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	return c.String(http.StatusOK, dataStr)
+}
+
+func GetAboutMe(c echo.Context) (err error) {
+	data, err := ioutil.ReadFile("G:/Projects/MyBlog/backend/markdown/aboutMe.md")
     if err != nil {
         return err
 	}

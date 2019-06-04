@@ -5,6 +5,7 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Class from '@/views/Class'
 import Article from '@/views/Article'
+import AboutMe from '@/views/AboutMe'
 
 Vue.use(Router)
 
@@ -39,6 +40,11 @@ export default new Router({
       path: '/Article/:article_id',
       name: 'Article',
       component: Article
+    },
+    {
+      path: '/AboutMe',
+      name: 'AboutMe',
+      component: AboutMe
     }
   ]
 })

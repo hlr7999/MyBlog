@@ -34,9 +34,11 @@
       :boxShadow = "false"
       :subfield = "false"
       defaultOpen = "preview"
+      :editable="false"
       :toolbarsFlag	= "false"
       :ishljs = "true"
       code-style = "github-gist"
+      :shortCut = "false"
     />
 
     <div class="likeColBox">
@@ -109,7 +111,7 @@ export default {
       }
 
       const axios = require('axios')
-      axios.get('http://localhost:10080/markdown')
+      axios.get('http://localhost:10080/article')
         .then(res => {
           this.articleInfo.content = res.data
         })
