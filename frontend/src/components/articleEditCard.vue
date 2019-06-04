@@ -59,6 +59,17 @@
     <el-button class="cancel" @click="cancelEdit">取消</el-button>
   </div>
 
+  <el-dialog
+    :title = "'新建'+newClassLevel+'级分类'"
+    :visible.sync = "dialogVisible"
+    width = "40%">
+    <el-input placeholder="输入分类" v-model="newClassName"></el-input>
+    <span slot="footer" class="dialog-footer">
+      <el-button class="cancel" @click="dialogVisible = false">取 消</el-button>
+      <el-button class="submit" @click="newClass">确 定</el-button>
+    </span>
+  </el-dialog>
+
 </div>
 </template>
 
@@ -122,7 +133,10 @@ export default {
         alignright: true, // 右对齐
         subfield: true,
         preview: true,
-      }
+      },
+      newClassLevel: "",
+      newClassName: "",
+      dialogVisible: false
     }
   },
 
@@ -139,10 +153,16 @@ export default {
     },
 
     newFirstClass() {
-
+      this.newClassLevel = "一"
+      this.dialogVisible = true
     },
 
     newSecondClass() {
+      this.newClassLevel = "二"
+      this.dialogVisible = true
+    },
+
+    newClass() {
 
     },
 
@@ -215,5 +235,15 @@ export default {
 .editBox .newClass {
   color: #67c23a;
   margin-left: 15px;
+}
+
+.editBox .el-dialog .el-input {
+  width: 70%;
+}
+
+@media screen and (max-width:800px) {
+  .editBox .el-dialog {
+    width: 96% !important;
+  }
 }
 </style>

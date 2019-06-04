@@ -235,4 +235,8 @@ export default {
   padding: 3px !important;
 }
 
+.detailArticleBox .markdown-body ul {
+  list-style: disc;
+}
+
 </style>

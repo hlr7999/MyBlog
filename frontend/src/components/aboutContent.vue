@@ -67,21 +67,25 @@ export default {
   overflow-x: hidden;
 }
 
-.markdown-body {
+.aboutContentBox .markdown-body {
   min-width: 0 !important;
 }
 
-.markdown-body .v-note-panel {
+.aboutContentBox .markdown-body .v-note-panel {
   border: 0 !important;
 }
 
-.markdown-body .v-note-panel .v-show-content {
+.aboutContentBox .markdown-body .v-note-panel .v-show-content {
   background-color: #fff !important;
 }
 
-.markdown-body .highlight pre, 
-.markdown-body pre {
+.aboutContentBox .markdown-body .highlight pre, 
+.aboutContentBox .markdown-body pre {
   padding: 3px !important;
+}
+
+.aboutContentBox .markdown-body ul {
+  list-style: disc;
 }
 
 </style>

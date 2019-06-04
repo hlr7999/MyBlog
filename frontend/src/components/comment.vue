@@ -420,26 +420,30 @@ export default {
   border-radius: 5px;
 }
 
-.commenInputBox h3 {
+.commenBox ul {
+  list-style: none;
+}
+
+.commenBox .commenInputBox h3 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
   text-align: left;
 }
 
-.commenInputBox textarea {
+.commenBox .commenInputBox textarea {
   background: #f4f6f7;
   height: 100px;
   margin-bottom: 10px;
 }
 
-.emoji {
+.commenBox .emoji {
   position: relative;
   z-index: 1;
   text-align: left;
 }
 
-.emoji .emoji-logo {
+.commenBox .emoji .emoji-logo {
   position: relative;
   border-radius: 4px;
   color: #444;
@@ -455,12 +459,12 @@ export default {
   line-height: 30px;
 }
 
-.emoji .emoji-logo:hover {
+.commenBox .emoji .emoji-logo:hover {
   animation: a 5s infinite ease-in-out;
   -webkit-animation: a 5s infinite ease-in-out;
 }
 
-.emoji .emoji-body {
+.commenBox .emoji .emoji-body {
   position: absolute;
   background: #fff;
   border: 1px solid #ddd;
@@ -470,21 +474,21 @@ export default {
   display: none;
 }
 
-.emoji-open .emoji-body {
+.commenBox .emoji-open .emoji-body {
   display: block;
 }
 
-.emoji-open .emoji-logo {
+.commenBox .emoji-open .emoji-logo {
   border-radius: 4px 4px 0 0;
   border-bottom: none;
 }
 
-.emoji-open .emoji-logo:hover {
+.commenBox .emoji-open .emoji-logo:hover {
   animation: none;
   -webkit-animation: none;
 }
 
-.emoji .emoji-items {
+.commenBox .emoji .emoji-items {
   max-height: 197px;
   overflow: scroll;
   font-size: 0;
@@ -492,7 +496,7 @@ export default {
   z-index: 1;
 }
 
-.emoji .emoji-items .emoji-item {
+.commenBox .emoji .emoji-items .emoji-item {
   background: #f7f7f7;
   padding: 5px 10px;
   border-radius: 5px;
@@ -504,7 +508,7 @@ export default {
   cursor: pointer;
 }
 
-.emoji .emoji-items .emoji-item:hover {
+.commenBox .emoji .emoji-items .emoji-item:hover {
   background: #eee;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -914,11 +918,11 @@ export default {
   }
 }
 
-.commentSendBox {
+.commenBox .commentSendBox {
   margin: 10px 0;
 }
 
-.commentSendBox .commentSendBtn {
+.commenBox .commentSendBox .commentSendBtn {
   margin: 10px 0;
   color: #fff;
   border-radius: 5px;
@@ -931,11 +935,11 @@ export default {
   user-select:none;
 }
 
-.commentSendBox .commentSendBtn:hover {
+.commenBox .commentSendBox .commentSendBtn:hover {
   background: #48456D;
 }
 
-.commentContent .commentContentTitle {
+.commenBox .commentContent .commentContentTitle {
   display: block;
   border-left: 2px solid #363d4c;
   padding: 0 10px;
@@ -944,28 +948,28 @@ export default {
   text-align: left;
 }
 
-.commentContentList {
+.commenBox .commentContentList {
   margin-bottom: 20px;
   text-align: left;
 }
 
-.commentContentBody > .commentContentList {
+.commenBox .commentContentBody > .commentContentList {
   border-bottom: 1px solid #e5eaed;
 }
 
-.commentContentListItem {
+.commenBox .commentContentListItem {
   border-top: 1px solid #e5eaed;
 }
 
-.commentContentListItem .commentItem {
+.commenBox .commentContentListItem .commentItem {
   margin: 20px 0;
 }
 
-.commentContentListItem .commentItem header {
+.commenBox .commentContentListItem .commentItem header {
   margin-bottom: 10px;
 }
 
-.commentContentListItem .commentItem header img {
+.commenBox .commentContentListItem .commentItem header img {
   width: 65px;
   height: 65px;
   border-radius: 50%;
@@ -976,12 +980,12 @@ export default {
   object-fit: cover;
 }
 
-.commentContentListItem .commentItem header img:hover {
+.commenBox .commentContentListItem .commentItem header img:hover {
   transform: rotate(360deg);
   -webkit-transform: rotate(360deg);
 }
 
-.commentContentListItem .commentItem header .i-name {
+.commenBox .commentContentListItem .commentItem header .i-name {
   font-size: 14px;
   margin: 5px 8px 7px 0;
   color: #444;
@@ -989,20 +993,20 @@ export default {
   display: inline-block;
 }
 
-.commentContentListItem .commentItem header .i-time {
+.commenBox .commentContentListItem .commentItem header .i-time {
   color: #aaa;
   font-size: 12px;
 }
 
-.commentContentListItem .commentItem section {
+.commenBox .commentContentListItem .commentItem section {
   margin-left: 80px;
 }
 
-.commentContentListItem .commentItem section p img {
+.commenBox .commentContentListItem .commentItem section p img {
   vertical-align: middle;
 }
 
-.commentContentListItem .commentItem section .replyBtn {
+.commenBox .commentContentListItem .commentItem section .replyBtn {
   display: inline-block;
   margin: 10px 0;
   font-size: 12px;

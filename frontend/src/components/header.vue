@@ -67,7 +67,7 @@
   z-index: 10080;
 }
 
-.headerMenu .el-col .el-dropdown {
+.header .headerMenu .el-col .el-dropdown {
   font-size: 16px;
   font-weight: 700;
   color: white;
@@ -75,12 +75,12 @@
   height: 100%;
 }
 
-.headerMenu .el-col .el-dropdown .el-dropdown-link {
+.header .headerMenu .el-col .el-dropdown .el-dropdown-link {
   width: 100%;
   height: 100%;
 }
 
-ul.el-dropdown-menu {
+.header ul.el-dropdown-menu {
   background-color: rgba(40, 42, 44, 0.6);
   border: 0;
   border-radius: 0%;
@@ -89,39 +89,39 @@ ul.el-dropdown-menu {
   top: 38px !important;
 }
 
-ul.el-dropdown-menu .popper__arrow {
+.header ul.el-dropdown-menu .popper__arrow {
   display: none;
 }
 
-ul.el-dropdown-menu li { 
+.header ul.el-dropdown-menu li { 
   color: white !important;
   font-size: 16px !important;
 }
 
-.headerLogo {
+.header .headerLogo {
   font-size: 30px;
   color: antiquewhite;
   cursor: pointer;
 }
 
-.headerMenu .el-col:hover div,
-.headerMenu .el-col:hover a,
-ul.el-dropdown-menu li:hover,
-.active {
+.header .headerMenu .el-col:hover div,
+.header .headerMenu .el-col:hover a,
+.header ul.el-dropdown-menu li:hover,
+.header .active {
   background-color: #48456C !important;
   color: gray !important;
 }
 
-.headerMenu .el-col {
+.header .headerMenu .el-col {
   cursor: pointer;
 }
 
-.headerMenu .el-col a {
+.header .headerMenu .el-col a {
   color: white;
   text-decoration: none;
 }
 
-.headerLogin {
+.header .headerLogin {
   cursor: pointer;
 }
 </style>
