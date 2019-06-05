@@ -1,12 +1,11 @@
-package user
+package controller
 
 import (
 	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo"
 	"net/http"
-	"sse.tongji.edu.cn/pwc/esg/crud"
-	"HBlog/db"
-	"HBlog/data"
+	"MyBlog/db"
+	"MyBlog/model"
 )
 
 const BaseURL = "/api/users"

@@ -1,4 +1,4 @@
-package auth
+package controller
 
 import (
 	"github.com/dgrijalva/jwt-go"
@@ -6,8 +6,8 @@ import (
 	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo"
 	"net/http"
-	"HBlog/db"
-	"HBlog/data"
+	"MyBlog/db"
+	"MyBlog/model"
 )
 
 const BaseURL = "/api/auth"

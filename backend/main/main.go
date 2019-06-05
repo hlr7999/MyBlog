@@ -1,8 +1,9 @@
 package main
 
 import (
-	"HBlog/db"
-	"HBlog/server"
+	"MyBlog/db"
+	"MyBlog/server"
+	"MyBlog/controller"
 	"flag"
 	"log"
 )
@@ -13,6 +14,8 @@ func main() {
 	flag.StringVar(&addr, "addr", ":1323", "server listens at this addr")
 	flag.Parse()
 
+	controller.initLogger()
+	
 	err := db.InitializeGlobalDB("127.0.0.1")
 	if err != nil {
 		log.Panic(err)
