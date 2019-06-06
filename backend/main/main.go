@@ -1,30 +1,17 @@
 package main
 
 import (
-	"MyBlog/db"
-	"MyBlog/server"
-	"MyBlog/controller"
 	"flag"
-	"log"
+
+	"MyBlog/server"
 )
 
 func main() {
-	var addr string
 	var initData bool
-	flag.StringVar(&addr, "addr", ":1323", "server listens at this addr")
+	flag.BoolVar(&initData, "init-data", false, "initialize data")
 	flag.Parse()
 
-	controller.initLogger()
+	port := ":2333"
 	
-	err := db.InitializeGlobalDB("127.0.0.1")
-	if err != nil {
-		log.Panic(err)
-	}
-
-	s := server.NewServer(addr)
-	err = s.Init()
-	if err != nil {
-		log.Panic(err)
-	}
-	s.Start()
+	server.Start(initData, port)
 }

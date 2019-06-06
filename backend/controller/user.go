@@ -1,58 +1,98 @@
 package controller
 
 import (
-	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo"
-	"net/http"
-	"MyBlog/db"
+	"github.com/globalsign/mgo/bson"
+
 	"MyBlog/model"
+	"MyBlog/app"
 )
 
-const BaseURL = "/api/users"
-
-func Initialize(e *echo.Group) (err error) {
-	b := crud.BasicCRUD{
-		BaseURL:       BaseURL,
-		GetCollection: db.Global.User,
-	}
-	b.SetRecordType(&model.User{})
-	err = b.Check()
-	if err != nil {
-		return err
-	}
-	e.GET(BaseURL, b.All)
-	e.POST(BaseURL, Create)
-	e.GET(BaseURL+"/:id", b.Get)
-	e.PUT(BaseURL+"/:id", b.Update)
-	e.DELETE(BaseURL+"/:id", b.Delete)
+func InitUser(e *echo.Echo) (err error) {
+	e.POST("/login", login)
+	e.POST("/register", register)
 	return nil
 }
 
-func Create(c echo.Context) (err error) {
-	collection, closeConn := db.Global.User()
-	defer closeConn()
+type LoginRequest struct {
+	Username string `bson:"username" json:"username"`
+	Password string `bson:"password" json:"password"`
+}
+
+func login(c echo.Context) error {
+	collection := app.DB().C(model.UserC)
+
+	loginReq := new(LoginRequest)
+	err := c.Bind(loginReq)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
+	}
 
 	user := new(model.User)
-	err = c.Bind(user)
+	err = collection.Find(bson.M{"username": loginReq.Username}).One(user)
 	if err != nil {
-		return err
+		return app.LoginFail(c)
 	}
-	n, err := collection.Find(bson.M{"username": user.Username}).Count()
+	
+	if !user.ComparePassword(loginReq.Password) {
+		return app.LoginFail(c)
+	}
+
+	token, err := app.CreateToken(user.ID.String(), user.Username, user.Role)
 	if err != nil {
-		return err
+		return app.ServerError(c, err)
 	}
-	if n != 0 {
-		return c.NoContent(http.StatusConflict)
+
+	return app.Ok(c, map[string]string {
+		"token": token,
+		"role": user.Role,
+	})
+}
+
+type RegisterRequest struct {
+	Username string `bson:"username" json:"username"`
+	Password string `bson:"password" json:"password"`
+	Email    string `bson:"emial" json:"email"`
+}
+
+func register(c echo.Context) error {
+	collection := app.DB().C(model.UserC)
+
+	registerReq := new(RegisterRequest)
+	err := c.Bind(registerReq)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
 	}
-	user.GenerateID()
+
+	user := new(model.User)
+
+	checkArr := [2]string {"username","email"}
+	for i, item := range checkArr {
+		var checkStr string
+		if i == 0 {
+			checkStr = registerReq.Username
+		} else {
+			checkStr = registerReq.Password
+		}
+		n, err := collection.Find(bson.M{item: checkStr}).Count()
+		if err != nil {
+			return app.ServerError(c, err)
+		}
+		if n != 0 {
+			return app.RegisterFail(c, item)
+		}
+	}
+	
+	user.Initialize()
 	err = user.CryptPassword()
 	if err != nil {
-		return err
+		return app.ServerError(c, err)
 	}
+
 	err = collection.Insert(user)
 	if err != nil {
-		return err
+		return app.ServerError(c, err)
 	}
-	user.APIResponsePre()
-	return c.JSON(http.StatusOK, user)
+	
+	return app.Ok(c, user.ToPartial())
 }

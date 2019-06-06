@@ -1,105 +1,105 @@
-package controller
+package app
 
 import (
+	// "errors"
+	// "net/http"
+	// "strings"
+
 	"github.com/dgrijalva/jwt-go"
-	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
-	"github.com/labstack/echo"
-	"net/http"
-	"MyBlog/db"
-	"MyBlog/model"
+	// "github.com/labstack/echo"
 )
 
-const BaseURL = "/api/auth"
+var secretKey = "welcome to my blog xixi haha"
 
-func Initialize(e *echo.Echo) error {
-	e.POST(BaseURL+"/login", Login)
-	e.POST(BaseURL+"/register", Register)
-	return nil
+func Secret() string {
+	return secretKey
 }
 
-type LoginForm struct {
-	Username string `bson:"username" json:"username"`
-	Password string `bson:"password" json:"password"`
-}
-
-func Login(c echo.Context) (err error) {
-	collection, closeConn := db.GlobalDB.User()
-	defer closeConn()
-	form := new(LoginForm)
-	err = c.Bind(form)
-	if err != nil {
-		return err
+func CreateToken(id string, username string, role string) (string, error) {
+	claims := jwt.MapClaims{
+		"id":       id,
+		"username": username,
+		"role":     role,
 	}
 
-	user := new(data.User)
-	err = collection.Find(bson.M{"username": form.Username}).One(user)
-	if err == mgo.ErrNotFound {
-		err2 := collection.Find(bson.M{"email": form.Username}).One(user)
-		if err2 == mgo.ErrNotFound {
-			return echo.ErrUnauthorized
-		} else if err2 != nil {
-			return err2
-		}
-	} else if err != nil {
-		return err
-	}
-
-	ok := user.ComparePassword(form.Password)
-	if !ok {
-		return echo.ErrUnauthorized
-	}
-	claims := &model.Claims{
-		UID:      user.Id,
-		Username: user.Username,
-	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte(data.Secret))
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, echo.Map{
-		"token": t
-	})
+
+	result, err := token.SignedString([]byte(secretKey))
+	return result, err
 }
 
-type RegisterForm struct {
-	Username string `bson:"username" json:"username"`
-	Email    string `bson:"email" json:"email`
-	Password string `bson:"password" json:"password"`
-}
+// func RequireAuth() echo.HandlerFunc {
+// 	return func(c *echo.Context) {
+// 		c.Header("WWW-Authenticate", "JWT realm="+auth.Realm)
 
-func Register(c echo.Context) (err error) {
-	collection, closeConn := db.GlobalDB.User()
-	defer closeConn()
-	form := new(RegisterForm)
-	err = c.Bind(form)
-	if err != nil {
-		return err
-	}
+// 		if authenticateUser(c) == false {
+// 			c.Abort()
+// 			return
+// 		}
+// 	}
+// }
 
-	user := new(data.User)
-	err = collection.Find(bson.M{"username": req.Username}).One(user)
-	if err != mgo.ErrNotFound {
-		return c.String(http.StatusFound, "Username has been registered")
-		err2 := collection.Find(bson.M{"email": req.Username}).One(user)
-		if err2 != mgo.ErrNotFound {
-			return c.String(http.StatusFound, "Email has been registered")
-	} else if err != nil {
-		return err
-	}
+// func RequireRole(allowedRoles ...string) echo.HandlerFunc {
+// 	return func(c *echo.Context) {
+// 		c.Header("WWW-Authenticate", "JWT realm="+auth.Realm)
 
-	user.Username = form.Username
-	user.Email = form.Email
-	byts, err := bcrypt.GenerateFromPassword([]byte(form.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	user.Password = string(byts)
-	user.GenerateID()
-	err = collection.Insert(user)
-	if err != nil {
-		return err
-	}
-	return c.String(http.StatusOK, "Register success!")
-}
+// 		if authenticateUser(c) == false {
+// 			Unauthorized(c)
+// 			return
+// 		}
+
+// 		role, exists := c.Get("role")
+// 		if !exists {
+// 			Unauthorized(c)
+// 			return
+// 		}
+
+// 		for _, allowedRole := range allowedRoles {
+// 			if role == allowedRole {
+// 				return
+// 			}
+// 		}
+
+// 		Unauthorized(c)
+// 	}
+// }
+
+// func authenticateUser(c *echo.Context) bool {
+// 	token, err := parseHeader(c.Request.Header.Get("Authorization"))
+// 	if err != nil {
+// 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+// 		return false
+// 	}
+
+// 	claims := token.Claims.(jwt.MapClaims)
+// 	user := claims["user"].(string)
+// 	role := claims["role"].(string)
+
+// 	if user == "" || role == "" {
+// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user or role"})
+// 		return false
+// 	}
+
+// 	c.Set("user", user)
+// 	c.Set("role", role)
+// 	return true
+// }
+
+// func parseHeader(header string) (*jwt.Token, error) {
+// 	if header == "" {
+// 		return nil, errors.New("empty authorization header")
+// 	}
+
+// 	parts := strings.SplitN(header, " ", 2)
+// 	if len(parts) != 2 || parts[0] != "Bearer" {
+// 		return nil, errors.New("invalid authorization header")
+// 	}
+
+// 	return jwt.Parse(parts[1], func(token *jwt.Token) (interface{}, error) {
+// 		if token.Method != jwt.SigningMethodHS256 {
+// 			return nil, errors.New("invalid singing algorithm")
+// 		}
+
+// 		return auth.Secret, nil
+// 	})
+// }

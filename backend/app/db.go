@@ -1,67 +1,46 @@
-package db
+package app
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
+
+	"MyBlog/model"
 )
 
-var GlobalDB *Database
+var db *mgo.Database
 
-const (
-	CUser = "user"
-)
+func InitDB(url string, datebase string) {
+	con, err := mgo.Dial(url)
+	if err != nil {
+		panic(err)
+	}
 
-type GetCollection func() (collection *mgo.Collection, closeConn func())
+	db = con.DB(datebase)
 
-func InitializeGlobalDB(url string) error {
-	d, err := NewDatabase(url)
+	// Ensure all index
+	if err = model.EnsureUserIndex(db); err != nil {
+		panic(err)
+	}
+}
+
+func InitData() error {
+	admin := &model.User{
+		Username: "hlr7999",
+		Password: "",
+		Role:     model.AdminRole,
+		Email:    "hlr7999@outlook.com",
+	}
+	admin.ID = bson.NewObjectId()
+	admin.SetPassword("heliren1999")
+
+	err := db.C(model.UserC).Insert(admin)
 	if err != nil {
 		return err
 	}
-	err = d.EnsureIndex()
-	if err != nil {
-		return err
-	}
-	GlobalDB = d
+
 	return nil
 }
 
-type Database struct {
-	session *mgo.Session
-}
-
-func NewDatabase(url string) (*Database, error) {
-	session, err := mgo.Dial(url)
-	if err != nil {
-		return nil, err
-	}
-	d := &Database{
-		session: session,
-	}
-	return d, nil
-}
-
-func (d *Database) DB() (*mgo.Database, func()) {
-	conn := d.session.Copy()
-	return conn.DB("esg"), func() {
-		conn.Close()
-	}
-}
-
-func (d *Database) EnsureIndex() (err error) {
-	database, closeConn := d.DB()
-	defer closeConn()
-	err = database.C(CUser).EnsureIndex(mgo.Index{
-		Key:    []string{"username"},
-		Unique: true,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (d *Database) User() (collection *mgo.Collection, closeConn func()) {
-	database, closeConn := d.DB()
-	collection = database.C(CUser)
-	return collection, closeConn
+func DB() *mgo.Database {
+	return db
 }
