@@ -45,33 +45,28 @@
   border-width: 1.5px;
 }
 
-.el-form .el-form-item .el-button {
+.login .el-form .el-form-item .el-button {
   width: 100%!important;
 }
 
-.el-form .el-form-item .el-checkbox {
-  float: left!important;
-  margin-left: 10px!important;
-}
-
-.el-form .el-form-item.passwordItem {
+.login .el-form .el-form-item.passwordItem {
   margin-bottom: 0;
 }
 
-.el-form .el-form-item.forget {
+.login .el-form .el-form-item.forget {
   text-align: right!important;
   margin-right: 10px!important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-.el-form .el-form-item.forget a {
+.login .el-form .el-form-item.forget a {
   color: gray;
 }
 </style>
 
 <script>
-import { User } from '../api/user'
+// import { User } from '../api/user'
 import header from "../components/header.vue"
 
 export default {
@@ -88,7 +83,7 @@ export default {
       },
       rules: {
         usernameORemail: [
-          { required: true, message: '请输入用户名或邮箱', trigger: 'blur' },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           { max: 30, message: '输入过长', trigger: 'blur'}
         ],
         pass: [
@@ -104,26 +99,26 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          User.login(this.ruleForm.usernameORemail.trim(), this.ruleForm.pass.trim())
-            .then(() => {
-              this.$message({
-                  message: '登录成功',
-                  type: 'success',
-                  showClose: true,
-                  duration: 1000
-                })
-                this.$router.push({
-                  path: '/'
-                })
-            })
-            .catch(() => {
-              this.$message.error({
-                message: '用户名或密码错误',
-                type: 'error',
-                showClose: true,
-                duration: 2000
-              })
-            })
+          // User.login(this.ruleForm.usernameORemail.trim(), this.ruleForm.pass.trim())
+          //   .then(() => {
+          //     this.$message({
+          //         message: '登录成功',
+          //         type: 'success',
+          //         showClose: true,
+          //         duration: 1500
+          //       })
+          //       this.$router.push({
+          //         path: '/'
+          //       })
+          //   })
+          //   .catch(() => {
+          //     this.$message.error({
+          //       message: '用户名或密码错误',
+          //       type: 'error',
+          //       showClose: true,
+          //       duration: 2000
+          //     })
+          //   })
         }
       })
     },

@@ -1,11 +1,14 @@
 <template>
 <div class="header">
   <el-row :gutter="20" type="flex" justify="center">
-    <el-col :lg="5" :md="5" :sm="6" :xs="6" class="headerLogo">
-      <div  @click="homeBtn">
-        <i class="el-icon-watermelon"></i>MyBlog</div>
-      </el-col>
-    <el-col :lg="15" :md="15" :sm="16" :xs="13">
+
+    <el-col :lg="5" :md="5" :sm="6" :xs="6">
+      <div @click="homeBtn"  class="headerLogo">
+        <i class="el-icon-watermelon"></i>MyBlog
+      </div>
+    </el-col>
+
+    <el-col :lg="15" :md="15" :sm="15" :xs="13">
       <el-row :gutter="3" type="flex" justify="start" class="headerMenu">
         <el-col :lg="3" :md="3" :sm="4">
           <div :class="activeIndex == 1 ? 'active' : ''" @click="homeBtn">
@@ -13,7 +16,7 @@
         </el-col>
         <el-col :lg="3" :md="4" :sm="4">
           <div :class="activeIndex == 2 ? 'active' : ''">
-            <el-dropdown :showTimeout="100" @command="classSelect" placement="bottom-start">
+            <el-dropdown :showTimeout="100" @command="classSelect" placement="bottom">
               <div class="el-dropdown-link">
                 <i class="el-icon-s-grid"></i>分类<i class="el-icon-arrow-down el-icon--right"></i>
               </div>
@@ -36,8 +39,34 @@
         </el-col>
       </el-row>
     </el-col>
-    <el-col :lg="4" :md="4" :sm="4" :xs="5"><div class="headerLogin" @click="loginBtn">
-      <i class="el-icon-user-solid"></i>登录|注册</div></el-col>
+
+    <el-col v-if="!this.$store.state.hasLogin" :lg="4" :md="4" :sm="5" :xs="5">
+      <i class="el-icon-user-solid"></i>
+      <div class="headerLogin" @click="loginBtn(0)">
+        登录
+      </div>&nbsp;&nbsp;|
+      <div class="headerLogin" @click="loginBtn(1)">
+        注册
+      </div>
+    </el-col>
+    <el-col v-else :lg="4" :md="4" :sm="5" :xs="5">
+      <el-dropdown 
+        :showTimeout="100" 
+        @command="userSelect" 
+        placement="bottom"
+        class="userHeaderItem">
+        <div class="el-dropdown-link"> 
+          <img :src="this.$store.state.userInfo.userAvatar" class="userHeaderImg"/>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item 
+            v-for="c in userOpList"
+            :key="c.command"
+            :command="c.command">{{c.name}}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-col>
+    
   </el-row>
 </div>
 </template>
@@ -67,11 +96,20 @@
   z-index: 10080;
 }
 
+.header .el-row {
+  height: 100%;
+}
+
 .headerMenu .el-col .el-dropdown {
   font-size: 16px;
   font-weight: 700;
   color: white;
   width: 100%;
+  height: 100%;
+}
+
+.userHeaderItem.el-dropdown,
+.userHeaderItem.el-dropdown .el-dropdown-link {
   height: 100%;
 }
 
@@ -102,6 +140,7 @@ ul.el-dropdown-menu li {
   font-size: 30px;
   color: antiquewhite;
   cursor: pointer;
+  display: inline-block;
 }
 
 .header .headerMenu .el-col:hover div,
@@ -123,6 +162,19 @@ ul.el-dropdown-menu li:hover,
 
 .header .headerLogin {
   cursor: pointer;
+  display: inline-block;
+}
+
+.header .headerLogin:hover {
+  color: gray
+}
+
+.header .userHeaderImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  cursor: pointer;
+  margin-top: 5px;
 }
 </style>
 
@@ -139,6 +191,16 @@ export default {
       }, {
         id: "2",
         name: "读书分享"
+      }],
+      userOpList: [{
+        name: "个人中心",
+        command: "/userInfo"
+      }, {
+        name: "收藏列表",
+        command: "/collect"
+      }, {
+        name: "喜欢列表",
+        command: "/like"
       }]
     };
   },
@@ -158,6 +220,11 @@ export default {
         path: `/Class/${command}`
       });
     },
+    userSelect(command) {
+      this.$router.push ({
+        path: `${command}`
+      });
+    },
     aboutBtn() {
       this.$router.push ({
         path: '/Aboutme'
@@ -166,14 +233,29 @@ export default {
     startBtn() {
       window.location.href = 'http://localhost/start'
     },
-    loginBtn() {
-      this.$router.push ({
-        path: '/Login'
-      });
+    loginBtn(t) {
+      if (t == 0) {
+        this.$router.push ({
+          path: '/Login'
+        });
+      } else {
+        this.$router.push ({
+          path: '/Register'
+        });
+      }
     },
     getData() {
-
+      if (this.$store.state.isAdmin) {
+        this.userOpList.push({
+          name: "管理博客",
+          command: "/admin"
+        })
+      }
     }
+  },
+
+  mounted () {
+    this.getData()
   }
 }
 </script>

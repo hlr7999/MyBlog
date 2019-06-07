@@ -20,6 +20,7 @@ type User struct {
 	Password string        `bson:"password" json:"password"`
 	Email    string        `bson:"emial,omitempty" json:"email,omitempty"`
 	Role     string        `bson:"role"  json:"role"`
+	Avatar   string        `bson:"avatar" json:"avatar"`
 }
 
 func (u *User) ToPartial() UserPartial {

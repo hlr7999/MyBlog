@@ -46,6 +46,8 @@ func login(c echo.Context) error {
 	return app.Ok(c, map[string]string {
 		"token": token,
 		"role": user.Role,
+		"id": user.ID.String(),
+		"avatar": user.Avatar,
 	})
 }
 
