@@ -1,7 +1,21 @@
 <template>
 <div>
   <blog-header></blog-header>
-  <div class="login" v-loading.fullscreen.lock="this.$store.state.loading">
+
+  <div v-if="this.$store.state.hasLogin">
+    <el-dialog
+      title="您已登录"
+      :visible="true"
+      width="30%"
+      :show-close="false">
+      <span>您已经登录了</span>
+      <span slot="footer">
+        <el-button @click="goHome">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+  <div v-else class="login" v-loading.fullscreen.lock="this.$store.state.loading">
     <el-card shadow="always">
       <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane label="注册" name="first"></el-tab-pane>
@@ -25,6 +39,7 @@
       </el-form>
     </el-card>
   </div>
+
 </div>
 </template>
 
@@ -59,8 +74,10 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      var that = this
       this.$refs[formName].validate((valid) => {
-        if (valid) {
+        if (valid) { 
+          this.$store.commit("changeLoading", true)
           UserLogin(this.ruleForm)
           .then(res => {
             this.$message({
@@ -74,6 +91,7 @@ export default {
             this.$router.push({
               path: '/'
             })
+            this.$store.commit("changeLoading", false)
           })
           .catch(() => {
             this.$message.error({
@@ -82,16 +100,24 @@ export default {
               showClose: true,
               duration: 2000
             })
+            this.$store.commit("changeLoading", false)
           })
         }
       })
     },
+
     handleClick(tab, event) {
       if (tab.name === 'first') {
         this.$router.push({
           path: '/Register'
         })
       }
+    },
+
+    goHome() {
+      this.$router.push({
+        path: "/"
+      })
     }
   }
 }

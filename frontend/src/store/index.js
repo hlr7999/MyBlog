@@ -33,6 +33,9 @@ export default new Vuex.Store({
         userId: "",
         userAvatar: ""
       }
+    },
+    changeLoading(state, l) {
+      state.loading = l
     }
   }
 })
