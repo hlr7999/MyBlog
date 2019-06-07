@@ -31,6 +31,7 @@ func InitData() error {
 		Email:    "hlr7999@outlook.com",
 	}
 	admin.ID = bson.NewObjectId()
+	admin.Avatar = "http://localhost/blog/img/avatar/admin.jpg"
 	admin.SetPassword("heliren1999")
 
 	err := db.C(model.UserC).Insert(admin)

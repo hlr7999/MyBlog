@@ -81,6 +81,7 @@ func (u *User) Initialize() {
 		u.ID = bson.NewObjectId()
 	}
 	u.Role = UserRole
+	u.Avatar = "http://localhost/blog/img/avatar/default.jpg"
 }
 
 func (u *User) CryptPassword() (err error) {

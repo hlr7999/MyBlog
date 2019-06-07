@@ -71,6 +71,110 @@
 </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      classList: [{
+        id: "0",
+        name: "技术分享"
+      }, {
+        id: "1",
+        name: "生活随笔"
+      }, {
+        id: "2",
+        name: "读书分享"
+      }],
+      userOpList: [{
+        name: "个人中心",
+        command: "/userInfo"
+      }, {
+        name: "收藏列表",
+        command: "/collect"
+      }, {
+        name: "喜欢列表",
+        command: "/like"
+      }, {
+        name: "登出",
+        command: "logout"
+      }],
+      isAdmin: this.$store.state.isAdmin
+    };
+  },
+
+  props: {
+    activeIndex: Number
+  },
+
+  methods: {
+    homeBtn() {
+      this.$router.push ({
+        path: '/'
+      });
+    },
+
+    classSelect(command) {
+      this.$router.push ({
+        path: `/Class/${command}`
+      });
+    },
+
+    userSelect(command) {
+      if (command === "logout") {
+        this.Logout()
+      } else {
+        this.$router.push ({
+          path: `${command}`
+        });
+      }
+    },
+
+    aboutBtn() {
+      this.$router.push ({
+        path: '/Aboutme'
+      });
+    },
+
+    startBtn() {
+      window.location.href = 'http://localhost/start'
+    },
+
+    loginBtn(t) {
+      if (t == 0) {
+        this.$router.push ({
+          path: '/Login'
+        });
+      } else {
+        this.$router.push ({
+          path: '/Register'
+        });
+      }
+    },
+
+    Logout() {
+      localStorage.removeItem("currentUser")
+      this.$store.commit("logout")
+    },
+
+    getData() {
+      if (this.isAdmin) {
+        this.userOpList = [{
+          name: "管理博客",
+          command: "/admin"
+        }, {
+          name: "登出",
+          command: "logout"
+        }]
+      }
+    }
+  },
+
+  created () {
+    this.getData()
+  },
+}
+</script>
+
 <style>
 .header {
   position: fixed;
@@ -177,85 +281,3 @@ ul.el-dropdown-menu li:hover,
   margin-top: 5px;
 }
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      classList: [{
-        id: "0",
-        name: "技术分享"
-      }, {
-        id: "1",
-        name: "生活随笔"
-      }, {
-        id: "2",
-        name: "读书分享"
-      }],
-      userOpList: [{
-        name: "个人中心",
-        command: "/userInfo"
-      }, {
-        name: "收藏列表",
-        command: "/collect"
-      }, {
-        name: "喜欢列表",
-        command: "/like"
-      }]
-    };
-  },
-
-  props: {
-    activeIndex: Number
-  },
-
-  methods: {
-    homeBtn() {
-      this.$router.push ({
-        path: '/'
-      });
-    },
-    classSelect(command) {
-      this.$router.push ({
-        path: `/Class/${command}`
-      });
-    },
-    userSelect(command) {
-      this.$router.push ({
-        path: `${command}`
-      });
-    },
-    aboutBtn() {
-      this.$router.push ({
-        path: '/Aboutme'
-      });
-    },
-    startBtn() {
-      window.location.href = 'http://localhost/start'
-    },
-    loginBtn(t) {
-      if (t == 0) {
-        this.$router.push ({
-          path: '/Login'
-        });
-      } else {
-        this.$router.push ({
-          path: '/Register'
-        });
-      }
-    },
-    getData() {
-      if (this.$store.state.isAdmin) {
-        this.userOpList.push({
-          name: "管理博客",
-          command: "/admin"
-        })
-      }
-    }
-  },
-
-  mounted () {
-    this.getData()
-  }
-}
-</script>

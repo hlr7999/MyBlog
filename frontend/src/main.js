@@ -12,6 +12,13 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(mavonEditor)
 
+var currentUser = localStorage.getItem("currentUser")
+
+if (currentUser) {
+  currentUser = JSON.parse(currentUser)
+  store.commit("login", currentUser)
+}
+
 new Vue({
   el: '#app',
   router,
@@ -19,12 +26,3 @@ new Vue({
   template: '<App/>',
   store
 })
-
-var currentUser = localStorage.getItem("currentUser")
-
-if (currentUser) {
-  currentUser = JSON.parse(currentUser)
-  store.commit("changeHasLogin", true)
-  store.commit("changeIsAdmin", currentUser.role === "admin")
-  store.commit("changeUserInfo", currentUser)
-}
