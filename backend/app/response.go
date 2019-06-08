@@ -2,6 +2,7 @@ package app
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -42,8 +43,9 @@ func LoginFail(c echo.Context) error {
 	})
 }
 
-func RegisterFail(c echo.Context, checkStr string) error {
-	return c.JSON(http.StatusNotFound, map[string]string{
-		"error": checkStr + "has been registered",
+func RegisterFail(c echo.Context, checkStr string, code int) error {
+	return c.JSON(http.StatusConflict, map[string]string{
+		"error":     checkStr + " has been registered",
+		"errorCode": strconv.Itoa(code),
 	})
 }

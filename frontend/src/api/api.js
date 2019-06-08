@@ -10,13 +10,14 @@ const UserLogin = function(data) {
     })
 }
 
-// //用户注册
-// const getRegister = (username,password,email,callback) =>{
-//     let url = portUrl+'login/getRegister?username='+username+'&email='+email+'&password='+password;
-//     axios.get(url).then(num => {
-//             callback && callback(num.data)
-//     })
-// }
+//用户注册
+const UserRegister = function(data) {
+    return axios.post(baseUrl + "register", {
+        username: data.username,
+        password: data.pass,
+        email: data.email
+    })
+}
 
 
 // //用户退出
@@ -328,5 +329,6 @@ const UserLogin = function(data) {
 // }
 
 export {
-    UserLogin
+    UserLogin,
+    UserRegister
 }

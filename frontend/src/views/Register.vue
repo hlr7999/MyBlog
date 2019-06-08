@@ -56,7 +56,7 @@
 </style>
 
 <script>
-// import {loginServer} from '../api/login'
+import { UserRegister } from '../api/api'
 import header from '../components/header.vue'
 
 export default {
@@ -107,49 +107,59 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var that = this;
-          // loginServer(JSON.stringify(this.ruleForm), function(res){
-          //   var code = res.data;
-          //   switch(code) {
-          //     case 1000:
-          //       that.$message.success({
-          //         message: '注册成功',
-          //         type: 'success',
-          //         showClose: true,
-          //         duration: 2000
-          //       });
-          //       that.$router.push({
-          //         path: '/Login'
-          //       });
-          //       break;
-          //     case 1001:
-          //       that.$message.error({
-          //         message: '用户名已存在',
-          //         type: 'error',
-          //         showClose: true,
-          //         duration: 2000
-          //       });
-          //       break;
-          //     case 1002:
-          //       that.$message.error({
-          //         message: '邮箱已注册',
-          //         type: 'error',
-          //         showClose: true,
-          //         duration: 2000
-          //       });
-          //       break;
-          //     default:
-          //       that.$message.error({
-          //         message: '注册失败',
-          //         type: 'error',
-          //         showClose: true,
-          //         duration: 2000
-          //       });
-          //       that.$refs[formName].resetFields();
-          //       break;
-          //   }
-          // });
+        if (valid) { 
+          this.$store.commit("changeLoading", true)
+          UserRegister(this.ruleForm)
+          .then(res => {
+            this.$message({
+              message: '注册成功',
+              type: 'success',
+              showClose: true,
+              duration: 1500
+            })
+            this.$router.push({
+              path: '/Login'
+            })
+            this.$store.commit("changeLoading", false)
+          })
+          .catch(res => {
+            var err
+            try {
+              err = res.response.data.errorCode
+            } catch(e) {
+              this.$message.error({
+                message: '未知错误',
+                type: 'error',
+                showClose: true,
+                duration: 2000
+              })
+              this.$store.commit("changeLoading", false)
+              return
+            }
+            if (err === "0") {
+              this.$message.error({
+                message: '用户名已被注册',
+                type: 'error',
+                showClose: true,
+                duration: 2000
+              })
+            } else if (err === "1") {
+              this.$message.error({
+                message: '邮箱已被注册',
+                type: 'error',
+                showClose: true,
+                duration: 2000
+              })
+            } else {
+              this.$message.error({
+                message: '未知错误',
+                type: 'error',
+                showClose: true,
+                duration: 2000
+              })
+            }
+            this.$store.commit("changeLoading", false)
+          })
         }
       });
     },

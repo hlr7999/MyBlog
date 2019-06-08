@@ -54,7 +54,7 @@ func login(c echo.Context) error {
 type RegisterRequest struct {
 	Username string `bson:"username" json:"username"`
 	Password string `bson:"password" json:"password"`
-	Email    string `bson:"emial" json:"email"`
+	Email    string `bson:"email" json:"email"`
 }
 
 func register(c echo.Context) error {
@@ -74,19 +74,22 @@ func register(c echo.Context) error {
 		if i == 0 {
 			checkStr = registerReq.Username
 		} else {
-			checkStr = registerReq.Password
+			checkStr = registerReq.Email
 		}
 		n, err := collection.Find(bson.M{item: checkStr}).Count()
 		if err != nil {
 			return app.ServerError(c, err)
 		}
 		if n != 0 {
-			return app.RegisterFail(c, item)
+			return app.RegisterFail(c, item, i)
 		}
 	}
 	
+	user.Username = registerReq.Username
+	user.Email = registerReq.Email
+
 	user.Initialize()
-	err = user.CryptPassword()
+	err = user.SetPassword(registerReq.Password)
 	if err != nil {
 		return app.ServerError(c, err)
 	}

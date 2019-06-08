@@ -18,7 +18,7 @@ type User struct {
 	ID       bson.ObjectId `bson:"_id,omitempty" json:"_id,omitempty"`
 	Username string        `bson:"username,omitempty" json:"username,omitempty"`
 	Password string        `bson:"password" json:"password"`
-	Email    string        `bson:"emial,omitempty" json:"email,omitempty"`
+	Email    string        `bson:"email,omitempty" json:"email,omitempty"`
 	Role     string        `bson:"role"  json:"role"`
 	Avatar   string        `bson:"avatar" json:"avatar"`
 }
@@ -82,15 +82,4 @@ func (u *User) Initialize() {
 	}
 	u.Role = UserRole
 	u.Avatar = "http://localhost/blog/img/avatar/default.jpg"
-}
-
-func (u *User) CryptPassword() (err error) {
-	if u.Password != "" {
-		byts, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-		if err != nil {
-			return err
-		}
-		u.Password = string(byts)
-	}
-	return nil
 }
