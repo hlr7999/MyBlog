@@ -27,7 +27,8 @@ ul {
   z-index: 10086 !important;
 }
 
-.el-loading-mask.is-fullscreen {
+.el-loading-mask.is-fullscreen,
+.el-dialog__wrapper {
   z-index: 10088 !important;
 }
 

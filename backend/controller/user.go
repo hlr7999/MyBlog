@@ -38,7 +38,7 @@ func login(c echo.Context) error {
 		return app.LoginFail(c)
 	}
 
-	token, err := app.CreateToken(user.ID.String(), user.Username, user.Role)
+	token, err := app.CreateToken(user.ID.Hex(), user.Username, user.Role)
 	if err != nil {
 		return app.ServerError(c, err)
 	}
@@ -46,7 +46,7 @@ func login(c echo.Context) error {
 	return app.Ok(c, map[string]string {
 		"token": token,
 		"role": user.Role,
-		"id": user.ID.String(),
+		"id": user.ID.Hex(),
 		"avatar": user.Avatar,
 	})
 }
@@ -95,6 +95,15 @@ func register(c echo.Context) error {
 	}
 
 	err = collection.Insert(user)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	userLCList := new(model.UserLCList)
+	userLCList.ID = user.ID
+
+	collection = app.DB().C(model.UserLCListC)
+	err = collection.Insert(userLCList)
 	if err != nil {
 		return app.ServerError(c, err)
 	}

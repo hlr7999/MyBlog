@@ -51,6 +51,8 @@
       :ishljs = "true"
       code-style = "github-gist"
       :toolbars = "toolbars"
+      :subfield = "false"
+      defaultOpen = "edit"
     />
   </div>
 

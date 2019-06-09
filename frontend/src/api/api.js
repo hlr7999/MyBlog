@@ -2,7 +2,7 @@ import axios from 'axios'
 
 var baseUrl = "http://localhost:2333/"
 
-//用户登录
+// login
 const UserLogin = function(data) {
     return axios.post(baseUrl + "login", {
         username: data.username,
@@ -10,13 +10,18 @@ const UserLogin = function(data) {
     })
 }
 
-//用户注册
+// register
 const UserRegister = function(data) {
     return axios.post(baseUrl + "register", {
         username: data.username,
         password: data.pass,
         email: data.email
     })
+}
+
+// aboutMe
+const AboutMe = function() {
+    return axios.get(baseUrl + "aboutMe")
 }
 
 
@@ -330,5 +335,6 @@ const UserRegister = function(data) {
 
 export {
     UserLogin,
-    UserRegister
+    UserRegister,
+    AboutMe
 }

@@ -1,4 +1,4 @@
-<img src="static/img/head.jpg" width="200px" height="200px"/>
+<img src="http://localhost/blog/img/avatar/admin.jpg" width="200px" height="200px"/>
 
 ## 基本信息
 

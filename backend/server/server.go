@@ -20,9 +20,13 @@ func init() {
     }))
 
 	controller.InitUser(e)
+	controller.InitAboutMe(e)
+	controller.InitArticleNotAuth(e)
 
 	g := e.Group("/api")
 	g.Use(middleware.JWT([]byte(app.Secret())))
+
+	controller.InitArticleAuth(g)
 
 	app.InitLogger()
 

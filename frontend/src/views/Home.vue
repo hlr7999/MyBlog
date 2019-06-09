@@ -10,17 +10,20 @@
       <a v-show="!hasMore" class="viewMoreBtn" href="javascript:void(0);">暂无更多数据</a>
     </div>
   </div>
+  <blog-footer></blog-footer>
 </div>
 </template>
 
 <script>
 import header from "../components/header.vue"
 import articleCard from "../components/articleCard.vue" 
+import footer from "../components/footer.vue"
 
 export default {
   components: {
     'blog-header': header,
-    'article-card': articleCard
+    'article-card': articleCard,
+    'blog-footer': footer
   },
   data() {
     return {

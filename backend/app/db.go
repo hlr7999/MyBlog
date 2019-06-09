@@ -39,6 +39,13 @@ func InitData() error {
 		return err
 	}
 
+	adminLCList := new(model.UserLCList)
+	adminLCList.ID = admin.ID
+	err = db.C(model.UserLCListC).Insert(adminLCList)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

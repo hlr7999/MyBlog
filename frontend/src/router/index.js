@@ -7,11 +7,17 @@ import Class from '@/views/Class'
 import Article from '@/views/Article'
 import AboutMe from '@/views/AboutMe'
 import ArticleEdit from '@/views/ArticleEdit'
+import Forbidden from '@/views/Forbidden'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/Forbidden',
+      name: 'Forbidden',
+      component: Forbidden
+    },
     {
       path: '/',
       name: 'Home',

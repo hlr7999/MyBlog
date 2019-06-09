@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { AboutMe } from "../api/api"
+
 export default {
   data() {
     return {
@@ -38,16 +40,24 @@ export default {
     getData: function() {
      
       this.aboutInfo = {
-        id: "0",
         title: "关于我",
         content: "# Not found"
       }
 
-      const axios = require('axios')
-      axios.get('http://localhost:10080/aboutMe')
-        .then(res => {
-          this.aboutInfo.content = res.data
+      this.$store.commit("changeLoading", true)
+      AboutMe()
+      .then(res => {
+        this.aboutInfo.content = res.data
+      })
+      .catch(() => {
+        this.$message.error({
+          message: '未知错误',
+          type: 'error',
+          showClose: true,
+          duration: 2000
         })
+        this.$store.commit("changeLoading", false)
+      })
     },
 
   },

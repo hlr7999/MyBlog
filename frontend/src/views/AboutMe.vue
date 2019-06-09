@@ -12,6 +12,7 @@
 import header from "../components/header.vue"
 import aboutContent from "../components/aboutContent.vue"
 import comment from "../components/comment.vue"
+import footer from "../components/footer.vue"
 
 export default {
   data() {
@@ -22,7 +23,8 @@ export default {
   components: {
     "about-content": aboutContent,
     "blog-header": header,
-    "about-comment": comment
+    "about-comment": comment,
+    "blog-footer": footer
   }
 };
 </script>

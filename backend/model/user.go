@@ -7,6 +7,7 @@ import (
 )
 
 const UserC = "users"
+const UserLCListC = "userLCLists"
 
 const (
 	AdminRole = "admin"
@@ -21,6 +22,12 @@ type User struct {
 	Email    string        `bson:"email,omitempty" json:"email,omitempty"`
 	Role     string        `bson:"role"  json:"role"`
 	Avatar   string        `bson:"avatar" json:"avatar"`
+}
+
+type UserLCList struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty" json:"_id,omitempty"`
+	LikeList    []bson.ObjectId `bson:"likeList" json:"likeList"`
+	CollectList []bson.ObjectId `bson:"collectList" json:"collectList"`
 }
 
 func (u *User) ToPartial() UserPartial {
