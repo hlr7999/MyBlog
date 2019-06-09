@@ -14,7 +14,8 @@ export default new Vuex.Store({
       userToken: "",
       userId: "",
       userAvatar: ""
-    }
+    },
+    host: "http://localhost:2333/"
   },
 
   mutations: {
