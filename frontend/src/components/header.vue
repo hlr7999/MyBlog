@@ -87,13 +87,13 @@ export default {
       }],
       userOpList: [{
         name: "个人中心",
-        command: "/userInfo"
+        command: "/UserInfo"
       }, {
         name: "收藏列表",
-        command: "/collect"
+        command: "/Collect"
       }, {
         name: "喜欢列表",
-        command: "/like"
+        command: "/Like"
       }, {
         name: "登出",
         command: "logout"

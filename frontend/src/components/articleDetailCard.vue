@@ -39,6 +39,7 @@
       :ishljs = "true"
       code-style = "github-gist"
       :shortCut = "false"
+      :imageClick = "imageClick"
     />
 
     <div class="likeColBox">
@@ -170,6 +171,10 @@ export default {
     //       });
     //   }
     // }
+
+    imageClick() {
+      
+    }
   },
 
   watch: {

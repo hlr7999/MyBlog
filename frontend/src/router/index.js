@@ -8,6 +8,8 @@ import Article from '@/views/Article'
 import AboutMe from '@/views/AboutMe'
 import ArticleEdit from '@/views/ArticleEdit'
 import Forbidden from '@/views/Forbidden'
+import LikeList from '@/views/LikeList'
+import UserInfo from '@/views/UserInfo'
 
 Vue.use(Router)
 
@@ -62,6 +64,21 @@ export default new Router({
       path: '/ModifyArticle/:article_id',
       name: 'ArticleEdit',
       component: ArticleEdit
+    },
+    {
+      path: '/Like',
+      name: 'LikeList',
+      component: LikeList
+    },
+    {
+      path: '/Collect',
+      name: 'CollectList',
+      component: LikeList
+    },
+    {
+      path: '/UserInfo',
+      name: 'UserInfo',
+      component: UserInfo
     }
   ]
 })

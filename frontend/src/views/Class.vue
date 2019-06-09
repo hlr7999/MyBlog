@@ -1,6 +1,7 @@
 <template>
 <div>
   <blog-header :activeIndex="2"></blog-header>
+
   <div class="container">
     <div class="classTitle">
       <div class="classLabel" >
@@ -17,23 +18,30 @@
     <div class="articleItem" v-for="article in articles" :key="article.id">
       <article-card :articleInfo="article"></article-card>
     </div>
-    <div class="viewmore">
-      <a v-show="hasMore" class="viewMoreBtn" href="javascript:void(0);" @click="viewMoreFun">点击加载更多</a>
-      <a v-show="!hasMore" class="viewMoreBtn" href="javascript:void(0);">暂无更多数据</a>
-    </div>
+    <el-pagination
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage"
+      :page-size="9"
+      layout="total, prev, pager, next"
+      :total="totalNum">
+    </el-pagination>
   </div>
+
+  <blog-footer></blog-footer>
 </div>
 </template>
 
 <script>
 import header from "../components/header.vue"
 import articleCard from "../components/articleCard.vue" 
+import footer from "../components/footer.vue"
 
 export default {
   name: 'home',
   components: {
     'blog-header': header,
-    'article-card': articleCard
+    'article-card': articleCard,
+    'blog-footer': footer
   },
   data() {
     return {
@@ -74,7 +82,8 @@ export default {
         description: "Vue.js搭建博客",
         image: "/static/img/vuelogo.jpg"
       }],
-      hasMore: true,
+      currentPage: this.$store.state.currentPage,
+      totalNum: 2,
       class_id: "0",
       son_class_id: "0",
       class_name: ""
@@ -88,7 +97,7 @@ export default {
       this.class_name = "技术分享"
     },
 
-    viewMoreFun() {
+    handleCurrentChange() {
 
     }
   },

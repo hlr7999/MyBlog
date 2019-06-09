@@ -16,6 +16,7 @@
       :ishljs = "true"
       code-style = "github-gist"
       :shortCut = "false"
+      :imageClick = "imageClick"
     />
 
   </div>
@@ -60,6 +61,9 @@ export default {
       })
     },
 
+    imageClick() {
+
+    }
   },
 
   mounted () {

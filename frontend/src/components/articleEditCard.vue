@@ -53,6 +53,7 @@
       :toolbars = "toolbars"
       :subfield = "false"
       defaultOpen = "edit"
+      @imgAdd = "$imgAdd"
     />
   </div>
 
@@ -166,6 +167,10 @@ export default {
 
     newClass() {
 
+    },
+
+    $imgAdd(pos, $file) {
+      console.log(pos, $file)
     },
 
     submitEdit() {

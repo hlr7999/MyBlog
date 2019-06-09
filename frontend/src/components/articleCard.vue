@@ -34,9 +34,9 @@
       </header>
       <div class="article-content">
         <p style="text-indent:2em;">{{articleInfo.description}}</p>
-        <p style="max-height:300px;overflow:hidden;text-align:center;">
+        <div :class="articleInfo.image ? 'imageCover' : 'noCover' ">
           <img :src="articleInfo.image" alt style="max-width:100%">
-        </p>
+        </div>
       </div>
       <div class="viewdetail">
         <a class="readWholeArticle" :href="'#/Article/'+articleInfo.id">阅读全文>></a>
@@ -59,5 +59,13 @@ export default {
 </script>
 
 <style>
+.a-articleInfo .article-content .imageCover {
+  max-height:300px;
+  overflow:hidden;
+  text-align:center;
+}
 
+.a-articleInfo .article-content .noCover {
+  display: none;
+}
 </style>
