@@ -21,6 +21,7 @@ func InitUserAuth(g *echo.Group) {
 	g.GET("/users/:id", getUser)
 	g.GET("/users", getAllUsers)
 	g.POST("/uploadAvatar", uploadAvatar)
+	g.PATCH("/users/:id", updateUser)
 }
 
 type LoginRequest struct {
@@ -212,4 +213,42 @@ func uploadAvatar(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, avatarPath)
+}
+
+type UpdateRequest struct {
+	Username string `bson:"usernmae" json:"username"`
+}
+
+func updateUser(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserC)
+	// get user id
+	id := c.Param("id")
+	if id != token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// get new user info
+	updateReq := new(UpdateRequest)
+	err := c.Bind(updateReq)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// new username exist
+	n, err := collection.Find(bson.M{"username": updateReq.Username}).Count()
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	if n != 0 {
+		return app.BadRequest(c, "1")
+	}
+	// update the user info
+	err = collection.Update(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+		bson.M{"$set": bson.M{"username": updateReq.Username}},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	return app.Ok(c, updateReq)
 }

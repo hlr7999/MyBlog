@@ -78,7 +78,7 @@
 import header from "../components/header.vue"
 import footer from "../components/footer.vue"
 
-import { GetUserInfo, UploadAvatar } from "../api/api"
+import { GetUserInfo, UploadAvatar, UpdateUser } from "../api/api"
 
 export default {
   name: "UserInfo",
@@ -91,7 +91,8 @@ export default {
   data() {
     return {
       isEdit: false,
-      userInfo: ""
+      userInfo: "",
+      oldUsername: ""
     };
   },
   methods: {
@@ -107,6 +108,7 @@ export default {
       GetUserInfo(this.$store.state.userInfo)
       .then(res => {
         this.userInfo = res.data
+        this.oldUsername = res.data.username
       })
       .catch(() => {
         this.$message.error("未知错误")
@@ -134,12 +136,14 @@ export default {
       var form = new FormData()
       form.append("file", fileObj)
 
-      UploadAvatar(form, this.$store.state.userInfo.userToken)
+      UploadAvatar(form)
       .then(res => {
+        this.userInfo.avatar = "http://localhost/img/avatar/admin.jpg"
         this.userInfo.avatar = res.data
         var user = JSON.parse(localStorage.getItem("currentUser"))
         user.avatar = res.data
         localStorage.setItem("currentUser", JSON.stringify(user))
+        this.$store.commit("changeAvatar", "http://localhost/img/avatar/admin.jpg")
         this.$store.commit("changeAvatar", res.data)
         this.$message({
           message: "上传成功",
@@ -157,7 +161,45 @@ export default {
     },
 
     saveInfoFun: function() {
-      
+      if (this.userInfo.username != this.oldUsername) {
+        UpdateUser(this.userInfo)
+        .then(res => {
+          this.oldUsername = this.userInfo.username
+          this.$message.success("保存成功")
+          this.isEdit = false
+        })
+        .catch(res => {
+          var err
+          try {
+            err = res.response.data.error
+          } catch(e) {
+            this.$message.error({
+              message: '未知错误',
+              type: 'error',
+              showClose: true,
+              duration: 2000
+            })
+            return
+          }
+          if (err === "1") {
+            this.$message.error({
+              message: '用户名已存在',
+              type: 'error',
+              showClose: true,
+              duration: 2000
+            })
+          } else {
+            this.$message.error({
+              message: '未知错误',
+              type: 'error',
+              showClose: true,
+              duration: 2000
+            })
+          }
+        })
+      } else {
+        this.isEdit = false
+      }
     }
   },
   

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '../store'
 
 var baseUrl = "http://localhost:2333/"
 var baseApi = "http://localhost:2333/api/"
@@ -54,15 +55,29 @@ const GetUserInfo = function(data) {
 }
 
 // upload avatar
-const UploadAvatar = function(data, token) {
+const UploadAvatar = function(data) {
     return axios({
         method: "POST",
         url: baseApi + "uploadAvatar",
         headers: {
             'Content-Type':'multipart/form-data',
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + store.state.userInfo.userToken
         },
         data: data
+    })
+}
+
+// update user info
+const UpdateUser = function(data) {
+    return axios({
+        method: "PATCH",
+        url: baseApi + "users/" + data._id,
+        headers : {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            username: data.username
+        }
     })
 }
 
@@ -73,5 +88,6 @@ export {
     GetHomeArticles,
     GetLCArticles,
     GetUserInfo,
-    UploadAvatar
+    UploadAvatar,
+    UpdateUser
 }
