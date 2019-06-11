@@ -39,8 +39,7 @@ export default {
 
 <style>
 .adminHome .el-tabs__header {
-  background-color: rgba(40, 42, 44, 0.6);
-  padding: 5px;
+  padding: 10px;
 }
 
 .adminHome .el-tabs__item {

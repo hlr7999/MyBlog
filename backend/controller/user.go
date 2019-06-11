@@ -26,6 +26,7 @@ func InitUserAuth(g *echo.Group) {
 	g.GET("/users", getAllUsers)
 	g.POST("/uploadAvatar", uploadAvatar)
 	g.PATCH("/users/:id", updateUser)
+	g.DELETE("/users/:id", deleteUser)
 }
 
 type LoginRequest struct {
@@ -161,9 +162,14 @@ func getAllUsers(c echo.Context) error {
 		return app.ServerError(c, err)
 	}
 
-	usersPartial := make([]model.UserPartial, len(users))
-	for i, user := range users {
+	usersPartial := make([]model.UserPartial, len(users) - 1)
+	i := 0
+	for _, user := range users {
+		if user.Role == model.AdminRole {
+			continue
+		}
 		usersPartial[i] = user.ToPartial()
+		i++
 	}
 
 	return app.Ok(c, users)
@@ -262,4 +268,31 @@ func updateUser(c echo.Context) error {
 	}
 
 	return app.Ok(c, updateReq)
+}
+
+func deleteUser(c echo.Context) error {
+	token := app.GetToken(c)
+	if token.Role != model.AdminRole {
+		return app.BadRequest(c, "Bad Request")
+	}
+
+	collection := app.DB().C(model.UserC)
+	// get user id
+	id := c.Param("id")
+
+	// delete user
+	// not admin
+	if id == token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+	err := collection.Remove(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	return app.Ok(c, map[string]string{
+		"message": "delete success",
+	})
 }

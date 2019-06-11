@@ -86,7 +86,18 @@ const GetUsers = function() {
     return axios({
         method: "GET",
         url: baseApi + "users",
-        headers : {
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        }
+    })
+}
+
+// delete user
+const DeleteUser = function(id) {
+    return axios({
+        method: "DELETE",
+        url: baseApi + "users/" + id,
+        headers: {
             "Authorization": "Bearer " + store.state.userInfo.userToken
         }
     })
@@ -101,5 +112,6 @@ export {
     GetUserInfo,
     UploadAvatar,
     UpdateUser,
-    GetUsers
+    GetUsers,
+    DeleteUser
 }

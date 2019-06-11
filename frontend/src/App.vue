@@ -32,6 +32,10 @@ ul {
   z-index: 10088 !important;
 }
 
+.el-pagination {
+  margin-top: 20px;
+}
+
 .el-pagination,
 .el-pagination .el-pagination__total,
 .el-pagination .btn-prev,
