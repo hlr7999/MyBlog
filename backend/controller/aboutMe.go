@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"MyBlog/app"
+	"MyBlog/config"
 )
 
 func InitAboutMe(e *echo.Echo) error {
@@ -14,7 +15,7 @@ func InitAboutMe(e *echo.Echo) error {
 }
 
 func getAboutMe(c echo.Context) error {
-	data, err := ioutil.ReadFile(app.FilePath + "data/aboutMe/aboutMe.md")
+	data, err := ioutil.ReadFile(config.FilePath + "data/aboutMe/aboutMe.md")
     if err != nil {
         return app.ServerError(c, err)
 	}

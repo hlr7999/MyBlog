@@ -154,6 +154,9 @@ export default {
     Logout() {
       localStorage.removeItem("currentUser")
       this.$store.commit("logout")
+      this.$router.push({
+        path: "/"
+      })
     },
 
     getData() {

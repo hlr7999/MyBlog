@@ -19,13 +19,14 @@ func init() {
         AllowOrigins: []string{"*"},
     }))
 
-	controller.InitUser(e)
+	controller.InitUserNotAuth(e)
 	controller.InitAboutMe(e)
 	controller.InitArticleNotAuth(e)
 
 	g := e.Group("/api")
 	g.Use(middleware.JWT([]byte(app.Secret())))
 
+	controller.InitUserAuth(g)
 	controller.InitArticleAuth(g)
 
 	app.InitLogger()

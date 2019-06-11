@@ -35,7 +35,7 @@ export default {
     return {
       totalArticles: [],
       articles: [],
-      currentPage: this.$store.state.currentPage,
+      currentPage: 1,
       totalNum: 0
     }
   },
@@ -46,7 +46,19 @@ export default {
         (this.currentPage - 1) * 9,
         this.currentPage * 9
       )
-      this.$store.commit("changePage", this.currentPage)
+      this.router.push({
+        path: "/page/" + this.currentPage
+      })
+    },
+
+    changePage() {
+      this.currentPage = Number(this.$route.params.page)
+      if (this.currentPage > (this.totalNum-1)/6 + 1) {
+        this.currentPage = 1
+        this.$router.push({
+          path: "/"
+        })
+      }
     },
 
     getData() {
@@ -55,14 +67,6 @@ export default {
         if (res.data) {
           this.totalArticles = res.data.articles
           this.totalNum = this.articles.length
-          if (this.currentPage > (this.totalNum-1)/6 + 1 ||
-              this.$store.state.lastUsePage != "H") {
-            this.currentPage = 1
-            this.$store.commit("changePage", this.currentPage)
-            if (this.$store.state.lastUsePage != "H") {
-              this.$store.commit("changeLastUsePage", "H")
-            }
-          }
           this.articles = this.articles.slice(
             (this.currentPage - 1) * 9,
             this.currentPage * 9
@@ -72,10 +76,15 @@ export default {
       .catch(() => {
         this.$message({
           message: "未知错误",
+          type: "error",
           duration: 1500
         })
       })
     }
+  },
+
+  watch: {
+    '$route': 'changePage'
   },
 
   created () {

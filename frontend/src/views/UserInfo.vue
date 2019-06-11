@@ -11,15 +11,15 @@
             <span class="leftTitle">头像</span>
             <el-upload
               class="avatar-uploader"
-              :action="this.$store.state.host+'Userinfo/UploadImg'"
+              action=""
+              accept="image/jpeg,image/gif,image/png"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
+              :http-request="uploadAvatar"
             >
               <img
                 v-if="userInfo.avatar"
                 :src="userInfo.avatar"
-                :auto-upload="false"
                 class="avatar"
               >
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -75,8 +75,10 @@
 </template>
 
 <script>
-import header from "../components/header.vue";
-import footer from "../components/footer.vue";
+import header from "../components/header.vue"
+import footer from "../components/footer.vue"
+
+import { GetUserInfo, UploadAvatar } from "../api/api"
 
 export default {
   name: "UserInfo",
@@ -94,22 +96,21 @@ export default {
   },
   methods: {
     getData() {
-      if (this.$store.state.hasLogin) {
-        this.userInfo = this.$store.state.userInfo
-      } else {
+      if (!this.$store.state.hasLogin) {
         this.$message.error("您未登录")
         this.$router.push({
           path: "/Forbidden"
         })
+        return
       }
-    },
 
-    handleAvatarSuccess(res, file) {
-      if (res.code == 1001) {
-        this.userInfo.avatar = res.image_name;
-      } else {
-        this.$message.error("上传图片失败");
-      }
+      GetUserInfo(this.$store.state.userInfo)
+      .then(res => {
+        this.userInfo = res.data
+      })
+      .catch(() => {
+        this.$message.error("未知错误")
+      })
     },
 
     beforeAvatarUpload(file) {
@@ -126,6 +127,33 @@ export default {
         this.$message.error("上传头像图片大小不能超过 1MB!");
       }
       return isJPG && isLt2M;
+    },
+
+    uploadAvatar(param) {
+      var fileObj = param.file
+      var form = new FormData()
+      form.append("file", fileObj)
+
+      UploadAvatar(form, this.$store.state.userInfo.userToken)
+      .then(res => {
+        this.userInfo.avatar = res.data
+        var user = JSON.parse(localStorage.getItem("currentUser"))
+        user.avatar = res.data
+        localStorage.setItem("currentUser", JSON.stringify(user))
+        this.$store.commit("changeAvatar", res.data)
+        this.$message({
+          message: "上传成功",
+          type: "success",
+          duration: 1500
+        })
+      })
+      .catch(() => {
+        this.$message({
+          message: "上传失败",
+          type: "error",
+          duration: 1500
+        })
+      })
     },
 
     saveInfoFun: function() {

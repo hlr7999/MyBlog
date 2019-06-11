@@ -3,15 +3,24 @@ package controller
 import (
 	"github.com/labstack/echo"
 	"github.com/globalsign/mgo/bson"
+	"net/http"
+	"os"
+	"io"
 
 	"MyBlog/model"
 	"MyBlog/app"
+	"MyBlog/config"
 )
 
-func InitUser(e *echo.Echo) (err error) {
+func InitUserNotAuth(e *echo.Echo) {
 	e.POST("/login", login)
 	e.POST("/register", register)
-	return nil
+}
+
+func InitUserAuth(g *echo.Group) {
+	g.GET("/users/:id", getUser)
+	g.GET("/users", getAllUsers)
+	g.POST("/uploadAvatar", uploadAvatar)
 }
 
 type LoginRequest struct {
@@ -109,4 +118,98 @@ func register(c echo.Context) error {
 	}
 	
 	return app.Ok(c, user.ToPartial())
+}
+
+func getUser(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserC)
+
+	id := c.Param("id")
+	if id != token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+
+	var user model.User
+	err := collection.FindId(bson.ObjectIdHex(id)).One(&user)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	if user.Username != token.Username || user.Role != token.Role {
+		return app.BadRequest(c, "Bad Request")
+	}
+
+	return app.Ok(c, user.ToPartial())
+}
+
+func getAllUsers(c echo.Context) error {
+	token := app.GetToken(c)
+	if token.Role != model.AdminRole {
+		return app.BadRequest(c, "Bad Request")
+	}
+
+	collection := app.DB().C(model.UserC)
+
+	// admin auth
+	var admin model.User
+	err := collection.FindId(bson.ObjectIdHex(token.ID)).One(&admin)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	if admin.Role != model.AdminRole || admin.Username != token.Username {
+		return app.BadRequest(c, "Bad Request")
+	}
+
+	var users []model.User
+	err = collection.Find(nil).All(&users)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	var usersPartial []model.UserPartial
+	for i, user := range users {
+		usersPartial[i] = user.ToPartial()
+	}
+
+	return app.Ok(c, users)
+}
+
+func uploadAvatar(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserC)
+
+	// read file
+	file, err := c.FormFile("file")
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	src, err := file.Open()
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer src.Close()
+
+	// Destination
+	dst, err := os.Create(config.ImagePath + "avatar/" + token.ID + ".jpg")
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer dst.Close()
+
+	// Copy
+	if _, err = io.Copy(dst, src); err != nil {
+		return app.ServerError(c, err)
+	}
+
+	// database
+	avatarPath := config.FrontImagePath + "avatar/" + token.ID + ".jpg"
+	err = collection.Update(
+		bson.M{"_id": bson.ObjectIdHex(token.ID)},
+		bson.M{"$set": bson.M{"avatar": avatarPath}},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	return c.String(http.StatusOK, avatarPath)
 }

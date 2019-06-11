@@ -5,8 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentPage: 1,
-    lastUsePage: "",
     loading: false,
     hasLogin: false,
     isAdmin: false,
@@ -19,17 +17,14 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    changPage(state, p) {
-      state.currentPage = p
-    },
-    changLastUsePage(state, lup) {
-      state.currentPage = lup
+    changeAvatar(state, data) {
+      state.userInfo.userAvatar = data
     },
     login(state, data) {
       state.hasLogin = true
       state.isAdmin = (data.role === "admin")
       state.userInfo = {
-        userToken: data.roken,
+        userToken: data.token,
         userId: data.id,
         userAvatar: data.avatar
       }

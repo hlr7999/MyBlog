@@ -4,6 +4,8 @@ import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"golang.org/x/crypto/bcrypt"
+
+	"MyBlog/config"
 )
 
 const UserC = "users"
@@ -30,17 +32,22 @@ type UserLCList struct {
 	CollectList []bson.ObjectId `bson:"collectList" json:"collectList"`
 }
 
-func (u *User) ToPartial() UserPartial {
-	return UserPartial{
-		ID:       u.ID,
-		Username: u.Username,
-	}
+type UserPartial struct {
+	ID       string `bson:"_id,omitempty" json:"_id,omitempty"`
+	Username string `bson:"username,omitempty" json:"username,omitempty"`
+	Email    string `bson:"email,omitempty" json:"email,omitempty"`
+	Role     string `bson:"role"  json:"role"`
+	Avatar   string `bson:"avatar" json:"avatar"`
 }
 
-type UserPartial struct {
-	ID       bson.ObjectId `bson:"_id,omitempty" json:"_id,omitempty"`
-	Username string        `bson:"username,omitempty" json:"username,omitempty"`
-	Role     string        `bson:"role"  json:"role"`
+func (u *User) ToPartial() UserPartial {
+	return UserPartial{
+		ID:       u.ID.Hex(),
+		Username: u.Username,
+		Email:    u.Email,
+		Role:     u.Role,
+		Avatar:   u.Avatar,
+	}
 }
 
 func EnsureUserIndex(db *mgo.Database) error {
@@ -88,5 +95,5 @@ func (u *User) Initialize() {
 		u.ID = bson.NewObjectId()
 	}
 	u.Role = UserRole
-	u.Avatar = "http://localhost/blog/img/avatar/default.jpg"
+	u.Avatar = config.FrontImagePath + "avatar/default.jpg"
 }

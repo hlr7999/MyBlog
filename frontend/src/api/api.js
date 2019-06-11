@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 var baseUrl = "http://localhost:2333/"
+var baseApi = "http://localhost:2333/api/"
 
 // login
 const UserLogin = function(data) {
@@ -41,10 +42,36 @@ const GetLCArticles = function(r) {
     return axios.get(baseUrl + "articles")
 }
 
+// userInfo
+const GetUserInfo = function(data) {
+    return axios({
+        method: "GET",
+        url: baseApi + "users/" + data.userId,
+        headers: {
+            "Authorization": "Bearer " + data.userToken
+        }
+    })
+}
+
+// upload avatar
+const UploadAvatar = function(data, token) {
+    return axios({
+        method: "POST",
+        url: baseApi + "uploadAvatar",
+        headers: {
+            'Content-Type':'multipart/form-data',
+            "Authorization": "Bearer " + token
+        },
+        data: data
+    })
+}
+
 export {
     UserLogin,
     UserRegister,
     AboutMe,
     GetHomeArticles,
-    GetLCArticles
+    GetLCArticles,
+    GetUserInfo,
+    UploadAvatar
 }

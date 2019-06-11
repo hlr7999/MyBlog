@@ -49,6 +49,7 @@ export default {
       AboutMe()
       .then(res => {
         this.aboutInfo.content = res.data
+        this.$store.commit("changeLoading", false)
       })
       .catch(() => {
         this.$message.error({
