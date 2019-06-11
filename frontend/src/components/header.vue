@@ -161,13 +161,10 @@ export default {
 
     getData() {
       if (this.isAdmin) {
-        this.userOpList = [{
+        this.userOpList.unshift({
           name: "管理博客",
           command: "/admin"
-        }, {
-          name: "登出",
-          command: "logout"
-        }]
+        })
       }
     }
   },
@@ -282,5 +279,6 @@ ul.el-dropdown-menu li:hover,
   border-radius: 100%;
   cursor: pointer;
   margin-top: 5px;
+  object-fit: cover;
 }
 </style>
