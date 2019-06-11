@@ -10,6 +10,7 @@ import ArticleEdit from '@/views/ArticleEdit'
 import Forbidden from '@/views/Forbidden'
 import LikeList from '@/views/LikeList'
 import UserInfo from '@/views/UserInfo'
+import AdminHome from '@/views/AdminHome'
 
 Vue.use(Router)
 
@@ -76,7 +77,17 @@ export default new Router({
       component: LikeList
     },
     {
+      path: '/Like/page/:page',
+      name: 'LikeList',
+      component: LikeList
+    },
+    {
       path: '/Collect',
+      name: 'CollectList',
+      component: LikeList
+    },
+    {
+      path: '/Collect/page/:page',
       name: 'CollectList',
       component: LikeList
     },
@@ -84,6 +95,16 @@ export default new Router({
       path: '/UserInfo',
       name: 'UserInfo',
       component: UserInfo
+    },
+    {
+      path: '/Admin',
+      name: 'AdminHome',
+      component: AdminHome
+    },
+    {
+      path: '/Admin/page/:page',
+      name: 'AdminHome',
+      component: AdminHome
     }
   ]
 })

@@ -45,27 +45,60 @@ export default {
       articles: [],
       currentPage: 1,
       totalNum: 0,
-      like: 0
+      like: 0,
+      homePath: ""
     }
   },
 
   methods: {
     handleCurrentChange() {
       this.articles = this.totalArticles.slice(
-        (currentPage - 1) * 9,
-        currentPage * 9
-      )
-      this.$store.commit("changePage", this.currentPage)
+        (this.currentPage - 1) * 9,
+        this.currentPage * 9
+      );
+      this.router.push({
+        path: this.homePath + "page/" + this.currentPage
+      });
+    },
+
+    changePage() {
+      if (this.$route.params.page) {
+        this.currentPage = Number(this.$route.params.page)
+        if (this.currentPage == 1) {
+          this.$router.push({
+            path: this.homePath
+          })
+        }
+      } else {
+        this.currentPage = 1
+      }
+      
+      if (this.currentPage > (this.totalNum-1)/6 + 1) {
+        this.currentPage = 1
+        this.$router.push({
+          path: this.homePath
+        })
+      }
     },
 
     getData() {
+      if (!this.$store.state.hasLogin) {
+        this.$message.error("您未登录")
+        this.$router.push({
+          path: "/Forbidden"
+        })
+        return
+      }
+      
       this.currentPage = 1
       var r = this.$route.path
       r = r.toLowerCase()
       if (r == "/like") {
         this.like = 1
+        this.homePath = "/Like"
       } else if (r == "/collect") {
         this.like = 2
+        this.homePath = "/Collect"
       }
       GetLCArticles(r)
       .then(res => {

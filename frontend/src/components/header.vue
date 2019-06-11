@@ -163,7 +163,7 @@ export default {
       if (this.isAdmin) {
         this.userOpList.unshift({
           name: "管理博客",
-          command: "/admin"
+          command: "/Admin"
         })
       }
     }
