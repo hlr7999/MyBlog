@@ -2,7 +2,7 @@
 <div class="adminHome">
   <blog-header :activeIndex="0"></blog-header>
   <div class="container">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" :lazy="true">
       <el-tab-pane label="文章管理" name="first">
         <article-list :type="1"></article-list>
       </el-tab-pane>

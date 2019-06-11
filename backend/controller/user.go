@@ -155,23 +155,13 @@ func getAllUsers(c echo.Context) error {
 
 	collection := app.DB().C(model.UserC)
 
-	// admin auth
-	var admin model.User
-	err := collection.FindId(bson.ObjectIdHex(token.ID)).One(&admin)
-	if err != nil {
-		return app.ServerError(c, err)
-	}
-	if admin.Role != model.AdminRole || admin.Username != token.Username {
-		return app.BadRequest(c, "Bad Request")
-	}
-
 	var users []model.User
-	err = collection.Find(nil).All(&users)
+	err := collection.Find(nil).All(&users)
 	if err != nil {
 		return app.ServerError(c, err)
 	}
 
-	var usersPartial []model.UserPartial
+	usersPartial := make([]model.UserPartial, len(users))
 	for i, user := range users {
 		usersPartial[i] = user.ToPartial()
 	}

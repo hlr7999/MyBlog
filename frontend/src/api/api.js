@@ -81,6 +81,17 @@ const UpdateUser = function(data) {
     })
 }
 
+// get users
+const GetUsers = function() {
+    return axios({
+        method: "GET",
+        url: baseApi + "users",
+        headers : {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        }
+    })
+}
+
 export {
     UserLogin,
     UserRegister,
@@ -89,5 +100,6 @@ export {
     GetLCArticles,
     GetUserInfo,
     UploadAvatar,
-    UpdateUser
+    UpdateUser,
+    GetUsers
 }
