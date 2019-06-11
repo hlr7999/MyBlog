@@ -6,6 +6,10 @@ import (
 	"net/http"
 	"os"
 	"io"
+	"math/rand"
+	"time"
+	"strings"
+	"strconv"
 
 	"MyBlog/model"
 	"MyBlog/app"
@@ -178,6 +182,7 @@ func getAllUsers(c echo.Context) error {
 func uploadAvatar(c echo.Context) error {
 	token := app.GetToken(c)
 	collection := app.DB().C(model.UserC)
+	rand.Seed(time.Now().UnixNano())
 
 	// read file
 	file, err := c.FormFile("file")
@@ -191,7 +196,23 @@ func uploadAvatar(c echo.Context) error {
 	defer src.Close()
 
 	// Destination
-	dst, err := os.Create(config.ImagePath + "avatar/" + token.ID + ".jpg")
+	// origin avatar
+	var user model.User
+	err = collection.FindId(bson.ObjectIdHex(token.ID)).One(&user)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	oldAvatars := strings.Split(user.Avatar, "/")
+	oldAvatar := oldAvatars[len(oldAvatars) - 1]
+	if oldAvatar != "default.jpg" {
+		err = os.Remove(config.ImagePath + "avatar/" + oldAvatar)
+		if err != nil {
+			return app.ServerError(c, err)
+		}
+	}
+	// new avatar
+	x := strconv.Itoa(rand.Intn(1000))
+	dst, err := os.Create(config.ImagePath + "avatar/" + token.ID + x + ".jpg")
 	if err != nil {
 		return app.ServerError(c, err)
 	}
@@ -203,7 +224,7 @@ func uploadAvatar(c echo.Context) error {
 	}
 
 	// database
-	avatarPath := config.FrontImagePath + "avatar/" + token.ID + ".jpg"
+	avatarPath := config.FrontImagePath + "avatar/" + token.ID + x + ".jpg"
 	err = collection.Update(
 		bson.M{"_id": bson.ObjectIdHex(token.ID)},
 		bson.M{"$set": bson.M{"avatar": avatarPath}},
