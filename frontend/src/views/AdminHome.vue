@@ -9,6 +9,9 @@
       <el-tab-pane label="用户管理" name="second">
         <user-list></user-list>
       </el-tab-pane>
+      <el-tab-pane label="分类管理" name="third">
+        <class-list></class-list>
+      </el-tab-pane>
     </el-tabs>
   </div>
   <blog-footer></blog-footer>
@@ -19,6 +22,7 @@
 import header from "../components/header.vue"
 import articleList from "../components/allArticleList.vue" 
 import userList from "../components/userList.vue"
+import classList from "../components/classList.vue"
 import footer from "../components/footer.vue"
 
 export default {
@@ -26,6 +30,7 @@ export default {
     'blog-header': header,
     'article-list': articleList,
     'user-list': userList,
+    'class-list': classList,
     'blog-footer': footer
   },
 

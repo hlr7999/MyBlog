@@ -26,10 +26,14 @@ const AboutMe = function() {
     return axios.get(baseUrl + "aboutMe")
 }
 
-
 // articles
 const GetHomeArticles = function() {
     return axios.get(baseUrl + "articles")
+}
+
+// get article
+const GetArticle = function(id) {
+    return axios.get(baseUrl + "articles/" + id)
 }
 
 // like or collect
@@ -108,6 +112,7 @@ export {
     UserRegister,
     AboutMe,
     GetHomeArticles,
+    GetArticle,
     GetLCArticles,
     GetUserInfo,
     UploadAvatar,

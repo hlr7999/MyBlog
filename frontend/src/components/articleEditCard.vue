@@ -45,16 +45,7 @@
   </div>
 
   <div class="editFormItem">
-    <mavon-editor
-      :value = "articleInfo.content"
-      :boxShadow = "false"
-      :ishljs = "true"
-      code-style = "github-gist"
-      :toolbars = "toolbars"
-      :subfield = "false"
-      defaultOpen = "edit"
-      @imgAdd = "$imgAdd"
-    />
+    
   </div>
 
   <div class="editFormItem">
@@ -77,66 +68,22 @@
 </template>
 
 <script>
+import { GetArticle } from "../api/api"
+
 export default {
     data() {
     return {
-      isNew: true,
       aid: "",
       articleInfo: {
         title: "",
         description: "",
         firstClass: "",
         secondClass: "",
-        content: ""
+        content: "",
+        imageCover: ""
       },
-      firstClassList: [{
-        id: "0",
-        name: "技术分享"
-      }, {
-        id: "1",
-        name: "生活随笔"
-      }, {
-        id: "2",
-        name: "读书分享"
-      }],
-      secondClassList: [{
-        id: "0",
-        name: "Vue.js"
-      }, {
-        id: "1",
-        name: "Golang"
-      }],
-      toolbars: {
-        bold: true, // 粗体
-        italic: true, // 斜体
-        header: true, // 标题
-        underline: true, // 下划线
-        strikethrough: true, // 中划线
-        mark: true, // 标记
-        superscript: true, // 上角标
-        subscript: true, // 下角标
-        quote: true, // 引用
-        ol: true, // 有序列表
-        ul: true, // 无序列表
-        link: true, // 链接
-        imagelink: true, // 图片链接
-        code: true, // code
-        table: true, // 表格
-        fullscreen: false,
-        readmodel: false,
-        htmlcode: true, // 展示html源码
-        help: false,
-        undo: false,
-        redo: false,
-        trash: true,
-        save: false,
-        navigation: false,
-        alignleft: true, // 左对齐
-        aligncenter: true, // 居中
-        alignright: true, // 右对齐
-        subfield: true,
-        preview: true,
-      },
+      firstClassList: [],
+      secondClassList: [],
       newClassLevel: "",
       newClassName: "",
       dialogVisible: false
@@ -145,13 +92,25 @@ export default {
 
   methods: {
     getData() {
-      this.aid = this.$route.params.article_id
-      if (this.aid) {
-        this.isNew = false
+      if (!this.$store.state.hasLogin || !this.$store.state.isAdmin) {
+        this.$router.push({
+          path: "/Forbidden"
+        })
       }
 
-      if (!this.isNew) {
-        // get article info
+      this.aid = this.$route.params.article_id
+      if (this.aid) {
+        GetArticle(this.aid)
+        .then(res => {
+          this.articleInfo = res.data 
+        })
+        .catch(() => {
+          this.$message({
+            message: "错误",
+            type: "error",
+            duration: 1500
+          })
+        })
       }
     },
 
@@ -179,7 +138,7 @@ export default {
 
     cancelEdit() {
       this.$router.push({
-        path: '/'
+        path: '/Admin'
       })
     }
   },
