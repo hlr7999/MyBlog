@@ -172,7 +172,7 @@ func getAllUsers(c echo.Context) error {
 		i++
 	}
 
-	return app.Ok(c, users)
+	return app.Ok(c, usersPartial)
 }
 
 func uploadAvatar(c echo.Context) error {
@@ -286,6 +286,14 @@ func deleteUser(c echo.Context) error {
 		return app.BadRequest(c, "Bad Request")
 	}
 	err := collection.Remove(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	// delete lclist
+	collection = app.DB().C(model.UserLCListC)
+	err = collection.Remove(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	)
 	if err != nil {

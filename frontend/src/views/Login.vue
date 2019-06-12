@@ -30,9 +30,9 @@
           <el-input type='password' v-model="ruleForm.pass" 
             placeholder="请输入密码" spellcheck="false"></el-input>
         </el-form-item>
-        <el-form-item class="forget">
+        <!-- <el-form-item class="forget">
           <a href="javascript:void(0)">忘记密码?</a>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
         </el-form-item>
@@ -147,7 +147,7 @@ export default {
 .login .el-form .el-form-item.passwordItem {
   margin-bottom: 0;
 }
-
+/* 
 .login .el-form .el-form-item.forget {
   text-align: right!important;
   margin-right: 10px!important;
@@ -157,5 +157,5 @@ export default {
 
 .login .el-form .el-form-item.forget a {
   color: gray;
-}
+} */
 </style>
