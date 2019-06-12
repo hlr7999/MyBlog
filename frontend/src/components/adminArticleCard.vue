@@ -3,6 +3,17 @@
     <el-col
       :span="24"
       class="a-articleInfo"
+      v-if="articleInfo.newArticle"
+    >
+      <div class="newArticleBox" @click="newArticleFunc">
+        <i class="el-icon-plus"></i>
+      </div>
+    </el-col>
+
+    <el-col
+      :span="24"
+      class="a-articleInfo"
+      v-else
     >
       <header>
         <h1>
@@ -51,12 +62,25 @@ export default {
   },
 
   methods: {
-
+    newArticleFunc() {
+      this.$router.push({
+        path: "/NewArticle"
+      })
+    }
   }
 };
 </script>
 
 <style>
+.newArticleBox {
+  text-align: center;
+  height: 70px;
+  line-height: 70px;
+  font-size: 40px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
 .classLabel  {
 left:-18px!important;
 padding-left:18px!important;

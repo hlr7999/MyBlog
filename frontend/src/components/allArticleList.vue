@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="articleItem" v-for="article in articles" :key="article.id">
+    <div class="articleItem" v-for="article in articles" :key="article._id">
       <admin-article-card v-if="type == 1" :articleInfo="article"></admin-article-card>
       <article-card v-else :articleInfo="article"></article-card>
     </div>
@@ -83,14 +83,21 @@ export default {
 
       GetHomeArticles()
       .then(res => {
-        if (res.data) {
-          this.totalArticles = res.data.articles;
-          this.totalNum = this.articles.length;
-          this.articles = this.articles.slice(
-            (this.currentPage - 1) * 9,
-            this.currentPage * 9
-          );
+        if (this.type == 1) {
+          this.totalArticles.unshift({
+            _id : "x",
+            newArticle: true
+          })
+          this.totalNum = 1
         }
+        if (res.data) {
+          this.totalArticles = this.totalArticles.concat(res.data.articles)
+          this.totalNum += this.articles.length
+        }
+        this.articles = this.totalArticles.slice(
+          (this.currentPage - 1) * 9,
+          this.currentPage * 9
+        )
       })
       .catch(() => {
         this.$message({
