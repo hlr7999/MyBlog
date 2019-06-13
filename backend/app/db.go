@@ -22,6 +22,10 @@ func InitDB(url string, datebase string) {
 	if err = model.EnsureUserIndex(db); err != nil {
 		panic(err)
 	}
+
+	if err = model.EnsureClassIndex(db); err != nil {
+		panic(err)
+	}
 }
 
 func InitData() error {
