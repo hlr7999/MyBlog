@@ -107,6 +107,67 @@ const DeleteUser = function(id) {
     })
 }
 
+// get all classes
+const GetClasses = function() {
+    return axios({
+        method: "GET",
+        url: baseUrl + "classes"
+    })
+}
+
+// get first classes
+const GetFirstClass = function() {
+    return axios({
+        method: "GET",
+        url: baseUrl + "/classes/first"
+    })
+}
+
+// get second classes
+const GetSecondClass = function(id) {
+    return axios.get(baseUrl + "/classes/second" + id)
+}
+
+// new first class
+const NewFirstClass = function(name) {
+    return axios({
+        method: "POST",
+        url: baseApi + "classes/first",
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            name: name
+        }
+    })
+}
+
+// new second class
+const NewSecondClass = function(name, father) {
+    return axios({
+        method: "POST",
+        url: baseApi + "classes/second",
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            name: name,
+            father: father
+        }
+    })
+}
+
+// delete class
+const DeleteClass = function(id) {
+    return axios({
+        method: "DELETE",
+        url: baseApi + "classes/" + id,
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        }
+    })
+}
+
 export {
     UserLogin,
     UserRegister,
@@ -118,5 +179,11 @@ export {
     UploadAvatar,
     UpdateUser,
     GetUsers,
-    DeleteUser
+    DeleteUser,
+    GetClasses,
+    GetFirstClass,
+    GetSecondClass,
+    NewFirstClass,
+    NewSecondClass,
+    DeleteClass
 }
