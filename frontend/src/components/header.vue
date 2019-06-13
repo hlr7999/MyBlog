@@ -75,16 +75,7 @@
 export default {
   data() {
     return {
-      classList: [{
-        id: "0",
-        name: "技术分享"
-      }, {
-        id: "1",
-        name: "生活随笔"
-      }, {
-        id: "2",
-        name: "读书分享"
-      }],
+      classList: this.$store.state.classList,
       userOpList: [{
         name: "个人中心",
         command: "/UserInfo"

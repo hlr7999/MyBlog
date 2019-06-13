@@ -13,10 +13,14 @@ export default new Vuex.Store({
       userId: "",
       userAvatar: ""
     },
-    host: "http://localhost:2333/"
+    host: "http://localhost:2333/",
+    classList: []
   },
 
   mutations: {
+    changeClassList(state, cl) {
+      state.classList = cl
+    },
     changeAvatar(state, data) {
       state.userInfo.userAvatar = data
     },

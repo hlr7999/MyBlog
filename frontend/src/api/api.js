@@ -119,13 +119,13 @@ const GetClasses = function() {
 const GetFirstClass = function() {
     return axios({
         method: "GET",
-        url: baseUrl + "/classes/first"
+        url: baseUrl + "classes/first"
     })
 }
 
 // get second classes
 const GetSecondClass = function(id) {
-    return axios.get(baseUrl + "/classes/second" + id)
+    return axios.get(baseUrl + "classes/second" + id)
 }
 
 // new first class
