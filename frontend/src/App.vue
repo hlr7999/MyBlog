@@ -32,6 +32,10 @@ ul {
   z-index: 10088 !important;
 }
 
+.el-select-dropdown {
+  z-index: 10089 !important;
+}
+
 .el-pagination {
   margin-top: 20px;
 }

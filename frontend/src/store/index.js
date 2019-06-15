@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { GetFirstClass } from "../api/api"
+import {Message} from 'element-ui'
 
 Vue.use(Vuex)
 
@@ -18,8 +20,14 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    changeClassList(state, cl) {
-      state.classList = cl
+    getClassList(state) {
+      GetFirstClass()
+      .then(res => {
+        state.classList = res.data
+      })
+      .catch(() => {
+        Message.error("获取分类失败")
+      })
     },
     changeAvatar(state, data) {
       state.userInfo.userAvatar = data

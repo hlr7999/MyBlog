@@ -23,8 +23,8 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item 
                   v-for="c in classList"
-                  :key="c.id"
-                  :command="c.id">{{c.name}}</el-dropdown-item>
+                  :key="c._id"
+                  :command="c._id">{{c.name}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -75,7 +75,6 @@
 export default {
   data() {
     return {
-      classList: this.$store.state.classList,
       userOpList: [{
         name: "个人中心",
         command: "/UserInfo"
@@ -163,6 +162,12 @@ export default {
   created () {
     this.getData()
   },
+
+  computed: {
+    classList () {
+      return this.$store.state.classList
+    }
+  }
 }
 </script>
 

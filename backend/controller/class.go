@@ -40,6 +40,7 @@ func getAllClasses(c echo.Context) error {
 	for i, item := range classes {
 		allClass[i].ID = item.ID.Hex()
 		allClass[i].Name = item.Name
+		allClass[i].Child = make([]model.ClassPartial, len(item.Child))
 		for j, sItem := range item.Child {
 			err = collection.Find(bson.M{"_id": bson.ObjectIdHex(sItem)}).One(&childClass)
 			if err != nil {
@@ -178,18 +179,11 @@ func deleteClass(c echo.Context) error {
 	}
 
 	collection := app.DB().C(model.ClassC)
+
 	// get class
 	id := c.Param("id")
 	var class model.Class
 	err := collection.FindId(bson.ObjectIdHex(id)).One(&class)
-	if err != nil {
-		return app.ServerError(c, err)
-	}
-
-	// delete class
-	err = collection.Remove(
-		bson.M{"_id": bson.ObjectIdHex(id)},
-	)
 	if err != nil {
 		return app.ServerError(c, err)
 	}
@@ -204,15 +198,14 @@ func deleteClass(c echo.Context) error {
 				return app.ServerError(c, err)
 			}
 		}
-	} else if class.Level == model.SecondLevel{
-		err = collection.Remove(
+	} else if class.Level == model.SecondLevel {
+		err = collection.Update(
 			bson.M{"_id": bson.ObjectIdHex(class.Child[0])},
+			bson.M{"$pull": bson.M{"child": class.ID.Hex()}},
 		)
-		if err != nil {
-			return app.ServerError(c, err)
-		}
 	}
 	
+	// delete class
 	err = collection.Remove(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	)
