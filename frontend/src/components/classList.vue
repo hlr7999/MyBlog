@@ -188,6 +188,7 @@ export default {
           duration: 1500
         })
         this.getData()
+        this.$store.commit("getClassList")
       })
       .catch(() => {
         this.$message({
