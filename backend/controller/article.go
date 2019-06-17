@@ -1,8 +1,14 @@
 package controller
 
 import (
+	"MyBlog/config"
 	"github.com/labstack/echo"
 	"github.com/globalsign/mgo/bson"
+	"time"
+	"os"
+	"io"
+	"net/http"
+	"io/ioutil"
 
 	"MyBlog/model"
 	"MyBlog/app"
@@ -43,13 +49,86 @@ func getArticle(c echo.Context) error {
 		return app.ServerError(c, err)
 	}
 
+	data, err := ioutil.ReadFile(article.Content)
+    if err != nil {
+        return app.ServerError(c, err)
+	}
+	article.Content = string(data)
+
 	return app.Ok(c, article)
 }
 
 func newArticle(c echo.Context) error {
-	// collection := app.DB().C(model.ArticleC)
+	token := app.GetToken(c)
+	if token.Role != model.AdminRole {
+		return app.BadRequest(c, "Bad Request")
+	}
+	collection := app.DB().C(model.ArticleC)
 
-	return nil
+	//===== basic info
+	article := new(model.Article)
+	article.ID = bson.NewObjectId()
+	article.Title = c.FormValue("title")
+	article.Description = c.FormValue("description")
+	article.ClassId = c.FormValue("classId")
+	article.ClassName = c.FormValue("className")
+	now := time.Now()
+	article.Year = now.Year()
+	article.Month = int(now.Month())
+	article.Day = now.Day()
+
+	//===== read content file
+	cfile, err := c.FormFile("content")
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	csrc, err := cfile.Open()
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer csrc.Close()
+	// contenr destination
+	cdstpath := config.FilePath + "articles/" + article.ID.Hex() + ".md"
+	cdst, err := os.Create(cdstpath)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer cdst.Close()
+	// copy content file
+	if _, err = io.Copy(cdst, csrc); err != nil {
+		return app.ServerError(c, err)
+	}
+	article.Content = cdstpath
+
+	//===== read cover file
+	ifile, err := c.FormFile("imageCover")
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	isrc, err := ifile.Open()
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer isrc.Close()
+	// cover destination
+	idst, err := os.Create(config.ImagePath + "articleCover/" + article.ID.Hex() + ".jpg")
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	defer idst.Close()
+	// cover content file
+	if _, err = io.Copy(idst, isrc); err != nil {
+		return app.ServerError(c, err)
+	}
+	article.ImageCover = config.FrontImagePath + "articleCover/" + article.ID.Hex() + ".jpg"
+
+	//===== database
+	err = collection.Insert(article)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	return c.String(http.StatusOK, "OK")
 }
 
 func updateArticle(c echo.Context) error {

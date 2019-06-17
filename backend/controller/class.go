@@ -69,14 +69,14 @@ func getSecondClasses(c echo.Context) error {
 	collection := app.DB().C(model.ClassC)
 
 	id := c.Param("id")
-	var childClasses []string
-	err := collection.FindId(bson.ObjectIdHex(id)).All(&childClasses)
+	var father model.Class
+	err := collection.FindId(bson.ObjectIdHex(id)).One(&father)
 	if err != nil {
 		return app.ServerError(c, err)
 	}
 
-	classes := make([]model.Class, len(childClasses))
-	for i, item := range childClasses {
+	classes := make([]model.Class, len(father.Child))
+	for i, item := range father.Child {
 		err := collection.FindId(bson.ObjectIdHex(item)).One(&classes[i])
 		if err != nil {
 			return app.ServerError(c, err)

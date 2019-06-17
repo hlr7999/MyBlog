@@ -20,15 +20,17 @@
 
   <div class="editFormItem">
     <div class="editFormTitle">一级分类:</div>
-    <el-select v-model="articleInfo.firstClass" placeholder="请选择一级分类">
+    <el-select 
+      v-model="articleInfo.firstClass" 
+      placeholder="请选择一级分类"
+      @change="changeFirstClass">
       <el-option
         v-for="item in firstClassList"
-        :key="item.id"
+        :key="item._id"
         :label="item.name"
-        :value="item.id">
+        :value="item._id">
       </el-option>
     </el-select>
-    <el-button type="text" class="newClass" @click="newFirstClass">新建</el-button>
   </div>
 
   <div class="editFormItem">
@@ -36,16 +38,27 @@
     <el-select v-model="articleInfo.secondClass" placeholder="请选择二级分类">
       <el-option
         v-for="item in secondClassList"
-        :key="item.id"
+        :key="item._id"
         :label="item.name"
-        :value="item.id">
+        :value="item">
       </el-option>
     </el-select>
-    <el-button type="text" class="newClass" @click="newSecondClass">新建</el-button>
   </div>
 
   <div class="editFormItem">
-    
+    <div class="editFormTitle">文章内容:</div>
+    <el-button type="primary" size="small" @click="contentFile">选择文件</el-button>
+    {{ articleInfo.content }}
+    <input type="file" class="fileUploadInput" accept=".md"
+      id="contentInput" @change="uploadContent($event)">
+  </div>
+
+  <div class="editFormItem">
+    <div class="editFormTitle">文章封面:</div>
+    <el-button type="primary" size="small" @click="coverFile">选择文件</el-button>
+    {{ articleInfo.imageCover }}
+    <input type="file" class="fileUploadInput"  accept="image/jpg, image/jpeg, image/png"
+      id="coverInput" @change="uploadCover($event)">
   </div>
 
   <div class="editFormItem">
@@ -53,22 +66,12 @@
     <el-button class="cancel" @click="cancelEdit">取消</el-button>
   </div>
 
-  <el-dialog
-    :title = "'新建'+newClassLevel+'级分类'"
-    :visible.sync = "dialogVisible"
-    width = "40%">
-    <el-input placeholder="输入分类" v-model="newClassName"></el-input>
-    <span slot="footer" class="dialog-footer">
-      <el-button class="cancel" @click="dialogVisible = false">取 消</el-button>
-      <el-button class="submit" @click="newClass">确 定</el-button>
-    </span>
-  </el-dialog>
-
 </div>
 </template>
 
 <script>
-import { GetArticle } from "../api/api"
+import { GetArticle, NewArticle } from "../api/api"
+import { GetClasses, GetSecondClass } from "../api/api"
 
 export default {
     data() {
@@ -82,10 +85,9 @@ export default {
         content: "",
         imageCover: ""
       },
+      formData: new FormData(),
       firstClassList: [],
       secondClassList: [],
-      newClassLevel: "",
-      newClassName: "",
       dialogVisible: false
     }
   },
@@ -112,28 +114,102 @@ export default {
           })
         })
       }
+
+      GetClasses()
+      .then(res => {
+        if (res.data) {
+          this.firstClassList = res.data
+        }
+      })
+      .catch(() => {
+        this.$message.error("错误")
+      })
     },
 
-    newFirstClass() {
-      this.newClassLevel = "一"
-      this.dialogVisible = true
+    changeFirstClass(item) {
+      this.articleInfo.secondClass = ""
+      GetSecondClass(item)
+      .then(res => {
+        if (res.data) {
+          this.secondClassList = res.data
+        }
+      })
+      .catch(() => {
+        this.$message.error("错误")
+      })
     },
 
-    newSecondClass() {
-      this.newClassLevel = "二"
-      this.dialogVisible = true
+    contentFile() {
+      var file = document.getElementById("contentInput")
+      file.click()
     },
 
-    newClass() {
-
+    coverFile() {
+      var file = document.getElementById("coverInput")
+      file.click()
     },
 
-    $imgAdd(pos, $file) {
-      console.log(pos, $file)
+    uploadContent(e) {
+      var files = e.target.files
+      if (files.length > 1) {
+        this.$message.error("选择文件过多")
+      }
+
+      var file = files[0]
+      if (file.size / 1024 / 1024 > 1) {
+        this.$message.error("文件大小不能超过 1MB!");
+        return
+      }
+      var type = file.name.split(".").pop()
+      if (type != "md" && type != "markdown") {
+        this.$message.error("只能是 markdown 文件!");
+      }
+
+      this.formData.append("content", file)
+      this.articleInfo.content = file.name
+    },
+
+    uploadCover(e) {
+      var files = e.target.files
+      if (files.length > 1) {
+        this.$message.error("选择文件过多")
+      }
+
+      var file = files[0]
+      if (file.size / 1024 / 1024 > 1) {
+        this.$message.error("图片大小不能超过 1MB!");
+        return
+      }
+      if (file.type != "image/png" && file.type != "image/jpg" 
+          && file.type != "image/jpeg") {
+        this.$message.error("图片只能是 JPG/JPEG/PNG 格式!");
+      }
+
+      this.formData.append("imageCover", file)
+      this.articleInfo.imageCover = file.name
     },
 
     submitEdit() {
+      console.log(this.articleInfo.secondClass)
+      if (!this.articleInfo.title || !this.articleInfo.description ||
+          !this.articleInfo.firstClass || !this.articleInfo.secondClass ||
+          !this.articleInfo.content) {
+        this.$message.error("信息未填写完整")
+        return
+      }
 
+      this.formData.append("title", this.articleInfo.title)
+      this.formData.append("description", this.articleInfo.description)
+      this.formData.append("classId", this.articleInfo.secondClass._id)
+      this.formData.append("className", this.articleInfo.secondClass.name)
+      NewArticle(this.formData)
+      .then(res => {
+        this.$message.success("创建成功")
+        this.$router.push("/Admin")
+      })
+      .catch(() => {
+        this.$message.error("错误")
+      })
     },
 
     cancelEdit() {
@@ -205,6 +281,10 @@ export default {
 
 .editBox .el-dialog .el-input {
   width: 70%;
+}
+
+.editBox .fileUploadInput {
+  display: none;
 }
 
 @media screen and (max-width:800px) {

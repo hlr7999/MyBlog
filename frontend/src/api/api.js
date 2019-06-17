@@ -47,6 +47,61 @@ const GetLCArticles = function(r) {
     return axios.get(baseUrl + "articles")
 }
 
+const IsLikeCollect = function(id) {
+    return axios({
+        method: "POST",
+        url: baseApi + "isLikeCollect",
+        headers : {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            "userId": store.state.userInfo.userId,
+            "articleId": id
+        }
+    })
+}
+
+const DoLikeCollect = function(id, isLike, likeOp, collectOp) {
+    if (isLike == 1) {
+        return axios({
+            method: "POST",
+            url: baseApi + "users/like/" + store.state.userInfo.userId,
+            headers : {
+                "Authorization": "Bearer " + store.state.userInfo.userToken
+            },
+            data: {
+                "articleId": id,
+                "op": likeOp
+            }
+        })
+    } else {
+        return axios({
+            method: "POST",
+            url: baseApi + "users/collect/" + store.state.userInfo.userId,
+            headers : {
+                "Authorization": "Bearer " + store.state.userInfo.userToken
+            },
+            data: {
+                "ArticleId": id,
+                "Op": collectOp
+            }
+        })
+    }
+}
+
+// new article
+const NewArticle = function(data) {
+    return axios({
+        method: "POST",
+        url: baseApi + "articles",
+        headers: {
+            'Content-Type':'multipart/form-data',
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: data
+    })
+}
+
 // userInfo
 const GetUserInfo = function(data) {
     return axios({
@@ -125,7 +180,7 @@ const GetFirstClass = function() {
 
 // get second classes
 const GetSecondClass = function(id) {
-    return axios.get(baseUrl + "classes/second" + id)
+    return axios.get(baseUrl + "classes/second/" + id)
 }
 
 // new first class
@@ -175,6 +230,9 @@ export {
     GetHomeArticles,
     GetArticle,
     GetLCArticles,
+    IsLikeCollect,
+    DoLikeCollect,
+    NewArticle,
     GetUserInfo,
     UploadAvatar,
     UpdateUser,

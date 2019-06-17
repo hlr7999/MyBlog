@@ -27,6 +27,8 @@ func InitUserAuth(g *echo.Group) {
 	g.POST("/uploadAvatar", uploadAvatar)
 	g.PATCH("/users/:id", updateUser)
 	g.DELETE("/users/:id", deleteUser)
+	g.POST("/isLikeCollect", isLikeCollect)
+	g.POST("/likeCollect/:id", doLikeCollect)
 }
 
 type LoginRequest struct {
@@ -177,6 +179,10 @@ func getAllUsers(c echo.Context) error {
 
 func uploadAvatar(c echo.Context) error {
 	token := app.GetToken(c)
+	if token.Role != model.AdminRole {
+		return app.BadRequest(c, "Bad Request")
+	}
+	
 	collection := app.DB().C(model.UserC)
 	rand.Seed(time.Now().UnixNano())
 
@@ -303,4 +309,85 @@ func deleteUser(c echo.Context) error {
 	return app.Ok(c, map[string]string{
 		"message": "delete success",
 	})
+}
+
+type IsLCReq struct {
+	UserId    string `json:"userId"`
+	ArticleId string `json:"articleId"`
+}
+
+func isLikeCollect(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserLCListC)
+	// get user id
+	isLCReq := new(IsLCReq)
+	err := c.Bind(isLCReq)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
+	}
+	if isLCReq.UserId != token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// get user lc list
+	ulcList := new(model.UserLCList)
+	err = collection.FindId(bson.ObjectIdHex(isLCReq.UserId)).One(ulcList)
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	aid := bson.ObjectIdHex(isLCReq.ArticleId)
+	isLike := false
+	for _, item := range ulcList.LikeList {
+		if item == aid {
+			isLike = true
+			break
+		}
+	}
+	isCollect := false
+	for _, item := range ulcList.CollectList {
+		if item == aid {
+			isCollect = true
+			break
+		}
+	}
+
+	return app.Ok(c, map[string]bool {
+		"isLike": isLike,
+		"isCollect": isCollect,
+	})
+}
+
+type DoLCReq struct {
+	ArticleId string `json:"articleId"`
+	Op		  bool   `json:"op"`
+	IsLike    bool   `json:"isLike"`
+}
+
+func doLike(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserLCListC)
+	// get user id
+	id := c.Param("id")
+	if id != token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// get request
+	doLCReq := new(DoLCReq)
+	err := c.Bind(doLCReq)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// do lc
+	ulcList := new(model.UserLCList)
+	err = collection.FindId(bson.ObjectIdHex(id)).One(ulcList)
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	aid := bson.ObjectIdHex(doLCReq.ArticleId)
+	if doLCReq.IsLike {
+		if Op {
+			
+		}
+	}
+
+	return c.String(http.StatusOK, "OK")
 }
