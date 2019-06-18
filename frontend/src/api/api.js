@@ -39,14 +39,26 @@ const GetArticle = function(id) {
 // like or collect
 const GetLCArticles = function(r) {
     r.toLowerCase()
+    var isLike
     if (r == '/like') {
-
+        isLike = 1
     } else if (r == '/collect') {
-
+        isLike = 0
     }
-    return axios.get(baseUrl + "articles")
+
+    return axios({
+        method: "GET",
+        url: baseApi + "users/likeCollect/" + store.state.userInfo.userId,
+        headers : {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            "isLike": isLike
+        }
+    })
 }
 
+// is like collect
 const IsLikeCollect = function(id) {
     return axios({
         method: "POST",
@@ -61,32 +73,26 @@ const IsLikeCollect = function(id) {
     })
 }
 
+// do like collect
 const DoLikeCollect = function(id, isLike, likeOp, collectOp) {
+    var op
     if (isLike == 1) {
-        return axios({
-            method: "POST",
-            url: baseApi + "users/like/" + store.state.userInfo.userId,
-            headers : {
-                "Authorization": "Bearer " + store.state.userInfo.userToken
-            },
-            data: {
-                "articleId": id,
-                "op": likeOp
-            }
-        })
+        op = likeOp
     } else {
-        return axios({
-            method: "POST",
-            url: baseApi + "users/collect/" + store.state.userInfo.userId,
-            headers : {
-                "Authorization": "Bearer " + store.state.userInfo.userToken
-            },
-            data: {
-                "ArticleId": id,
-                "Op": collectOp
-            }
-        })
+        op = collectOp
     }
+    return axios({
+        method: "POST",
+        url: baseApi + "users/likeCollect/" + store.state.userInfo.userId,
+        headers : {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            "articleId": id,
+            "op": op,
+            "isLike": isLike
+        }
+    })
 }
 
 // new article

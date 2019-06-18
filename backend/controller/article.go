@@ -49,6 +49,15 @@ func getArticle(c echo.Context) error {
 		return app.ServerError(c, err)
 	}
 
+	article.BrowseCount += 1
+	err = collection.Update(
+		bson.M{"_id": article.ID},
+		bson.M{"$set": bson.M{"browseCount": article.BrowseCount}},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
 	data, err := ioutil.ReadFile(article.Content)
     if err != nil {
         return app.ServerError(c, err)

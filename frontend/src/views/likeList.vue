@@ -8,7 +8,7 @@
       <h1 v-show="like==2"><i class="fa fa-wa fa-star"></i>收藏的文章</h1>
     </div>
 
-    <div class="articleItem" v-for="article in articles" :key="article.id">
+    <div class="articleItem" v-for="article in articles" :key="article._id">
       <article-card :articleInfo="article"></article-card>
     </div>
 
@@ -90,7 +90,6 @@ export default {
         return
       }
       
-      this.currentPage = 1
       var r = this.$route.path
       r = r.toLowerCase()
       if (r == "/like") {
@@ -100,20 +99,14 @@ export default {
         this.like = 2
         this.homePath = "/Collect"
       }
+      this.changePage()
+
       GetLCArticles(r)
       .then(res => {
         if (res.data) {
-          this.totalArticles = res.data.articles
-          this.totalNum = this.articles.length
-          if (this.currentPage > (this.totalNum-1)/6 + 1 ||
-              this.$store.state.lastUsePage != r) {
-            this.currentPage = 1
-            this.$store.commit("changePage", this.currentPage)
-            if (this.$store.state.lastUsePage != r) {
-              this.$store.commit("changeLastUsePage", r)
-            }
-          }
-          this.articles = this.articles.slice(
+          this.totalArticles = res.data
+          this.totalNum = this.totalArticles.length
+          this.articles = this.totalArticles.slice(
             (this.currentPage - 1) * 9,
             this.currentPage * 9
           )

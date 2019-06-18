@@ -96,21 +96,21 @@ export default {
         var tip = ""
         if (islike == 1) {
           if (!this.likeArt) {
-            this.likeCount += 1
+            this.articleInfo.likeCount += 1
             this.likeArt = true
             tip = "已点赞"
           } else {
-            this.likeCount -= 1
+            this.articleInfo.likeCount -= 1
             this.likeArt = false
             tip = "已取消点赞"
           }
         } else {
           if (!this.collectArt) {
-            this.collectCount += 1
+            this.articleInfo.collectCount += 1
             this.collectArt = true
             tip = "已收藏"
           } else {
-            this.collectCount -= 1
+            this.articleInfo.collectCount -= 1
             this.collectArt = false
             tip = "已取消收藏"
           }

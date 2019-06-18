@@ -28,7 +28,8 @@ func InitUserAuth(g *echo.Group) {
 	g.PATCH("/users/:id", updateUser)
 	g.DELETE("/users/:id", deleteUser)
 	g.POST("/isLikeCollect", isLikeCollect)
-	g.POST("/likeCollect/:id", doLikeCollect)
+	g.POST("/users/likeCollect/:id", doLikeCollect)
+	g.GET("/users/likeCollect/:id", getLikeCollect)
 }
 
 type LoginRequest struct {
@@ -359,12 +360,13 @@ func isLikeCollect(c echo.Context) error {
 type DoLCReq struct {
 	ArticleId string `json:"articleId"`
 	Op		  bool   `json:"op"`
-	IsLike    bool   `json:"isLike"`
+	IsLike    int    `json:"isLike"`
 }
 
-func doLike(c echo.Context) error {
+func doLikeCollect(c echo.Context) error {
 	token := app.GetToken(c)
 	collection := app.DB().C(model.UserLCListC)
+	Ac := app.DB().C(model.ArticleC)
 	// get user id
 	id := c.Param("id")
 	if id != token.ID {
@@ -383,11 +385,119 @@ func doLike(c echo.Context) error {
 		return app.BadRequest(c, err.Error())
 	}
 	aid := bson.ObjectIdHex(doLCReq.ArticleId)
-	if doLCReq.IsLike {
-		if Op {
-			
+	if doLCReq.IsLike == 1 {
+		if doLCReq.Op {
+			err = collection.Update(
+				bson.M{"_id": bson.ObjectIdHex(id)},
+				bson.M{"$addToSet": bson.M{"likeList": aid}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+			err = Ac.Update(
+				bson.M{"_id": aid},
+				bson.M{"$inc": bson.M{"likeCount": 1}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+		} else {
+			err = collection.Update(
+				bson.M{"_id": bson.ObjectIdHex(id)},
+				bson.M{"$pull": bson.M{"likeList": aid}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+			err = Ac.Update(
+				bson.M{"_id": aid},
+				bson.M{"$inc": bson.M{"likeCount": -1}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+		}
+	} else {
+		if doLCReq.Op {
+			err = collection.Update(
+				bson.M{"_id": bson.ObjectIdHex(id)},
+				bson.M{"$addToSet": bson.M{"collectList": aid}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+			err = Ac.Update(
+				bson.M{"_id": aid},
+				bson.M{"$inc": bson.M{"collectCount": 1}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+		} else {
+			err = collection.Update(
+				bson.M{"_id": bson.ObjectIdHex(id)},
+				bson.M{"$pull": bson.M{"collectList": aid}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+			err = Ac.Update(
+				bson.M{"_id": aid},
+				bson.M{"$inc": bson.M{"collectCount": -1}},
+			)
+			if err != nil {
+				return app.ServerError(c, err)
+			}
 		}
 	}
 
 	return c.String(http.StatusOK, "OK")
+}
+
+type IsLike struct {
+	IsLike int `json:"isLike"`
+}
+
+func getLikeCollect(c echo.Context) error {
+	token := app.GetToken(c)
+	collection := app.DB().C(model.UserLCListC)
+	Ac := app.DB().C(model.ArticleC)
+	// get user id
+	id := c.Param("id")
+	if id != token.ID {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// get request
+	isLike := new(IsLike)
+	err := c.Bind(isLike)
+	if err != nil {
+		return app.BadRequest(c, "Bad Request")
+	}
+	// get lc
+	ulcList := new(model.UserLCList)
+	err = collection.FindId(bson.ObjectIdHex(id)).One(ulcList)
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	if isLike.IsLike == 1 {
+		articles := make([]model.Article, len(ulcList.LikeList))
+		for i, item := range ulcList.LikeList {
+			err = Ac.FindId(item).One(&articles[i])
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+		}
+
+		return app.Ok(c, articles)
+	} else {
+		articles := make([]model.Article, len(ulcList.CollectList))
+		for i, item := range ulcList.CollectList {
+			err = Ac.FindId(item).One(&articles[i])
+			if err != nil {
+				return app.ServerError(c, err)
+			}
+		}
+
+		return app.Ok(c, articles)
+	}
 }
