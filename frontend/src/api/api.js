@@ -36,6 +36,17 @@ const GetArticle = function(id) {
     return axios.get(baseUrl + "articles/" + id)
 }
 
+// delete article
+const DeleteArticle = function(id) {
+    return axios({
+        method: "DELETE",
+        url: baseApi + "articles/" + id,
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        }
+    })
+}
+
 // like or collect
 const GetLCArticles = function(r) {
     r.toLowerCase()
@@ -235,6 +246,7 @@ export {
     AboutMe,
     GetHomeArticles,
     GetArticle,
+    DeleteArticle,
     GetLCArticles,
     IsLikeCollect,
     DoLikeCollect,

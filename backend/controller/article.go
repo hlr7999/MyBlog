@@ -22,7 +22,6 @@ func InitArticleNotAuth(e *echo.Echo) error {
 
 func InitArticleAuth(g *echo.Group) error {
 	g.POST("/articles", newArticle)
-	g.PATCH("/articles/:id", updateArticle)
 	g.DELETE("/articles/:id", deleteArticle)
 	return nil
 }
@@ -112,7 +111,12 @@ func newArticle(c echo.Context) error {
 	//===== read cover file
 	ifile, err := c.FormFile("imageCover")
 	if err != nil {
-		return app.BadRequest(c, err.Error())
+		err = collection.Insert(article)
+		if err != nil {
+			return app.ServerError(c, err)
+		}
+
+		return c.String(http.StatusOK, "OK")
 	}
 	isrc, err := ifile.Open()
 	if err != nil {
@@ -140,14 +144,23 @@ func newArticle(c echo.Context) error {
 	return c.String(http.StatusOK, "OK")
 }
 
-func updateArticle(c echo.Context) error {
-	// collection := app.DB().C(model.ArticleC)
-
-	return nil
-}
-
 func deleteArticle(c echo.Context) error {
-	// collection := app.DB().C(model.ArticleC)
+	collection := app.DB().C(model.ArticleC)
+	token := app.GetToken(c)
+	if token.Role != model.AdminRole {
+		return app.BadRequest(c, "Bad Request")
+	}
 
-	return nil
+	// get article id
+	id := c.Param("id")
+
+	// delete article
+	err := collection.Remove(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+	)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+
+	return c.String(http.StatusOK, "OK")
 }

@@ -17,7 +17,7 @@
     >
       <header>
         <h1>
-          <a :href="'#/Article/'+articleInfo.id">{{articleInfo.title}}</a>
+          <a :href="'#/Article/'+articleInfo._id">{{articleInfo.title}}</a>
         </h1>
         <h2>
           <i class="fa fa-fw fa-user"></i>发表于
@@ -25,35 +25,48 @@
           <span
             v-html="articleInfo.year + '年' + articleInfo.month + '月' + articleInfo.day + '日'"></span> •
           <i class="fa fa-fw fa-eye"></i>
-          {{articleInfo.browse_count}} 次浏览 •
+          {{articleInfo.browseCount}} 次浏览 •
           <i class="fa fa-fw fa-comments"></i>
-          {{articleInfo.comment_count}} 条评论 •
+          {{articleInfo.commentCount}} 条评论 •
           <span class="rateBox">
             <i class="fa fa-fw fa-heart"></i>
-            {{articleInfo.like_count?articleInfo.like_count:0}}点赞 •
+            {{articleInfo.like_count?articleInfo.likeCount:0}}点赞 •
             <i class="fa fa-fw fa-star"></i>
-            {{articleInfo.collect_count?articleInfo.collect_count:0}}收藏
+            {{articleInfo.collect_count?articleInfo.collectCount:0}}收藏
           </span>
         </h2>
         <div class="classLabel">
-          <a :href="'#/Class/'+articleInfo.class_id">{{articleInfo.class_name}}</a>
+          <a :href="'#/Class/'+articleInfo.classId">{{articleInfo.className}}</a>
         </div>
       </header>
       <div class="article-content">
         <p style="text-indent:2em;">{{articleInfo.description}}</p>
       </div>
       <div class="btnBox">
-        <el-button size="mini">修改</el-button>
-        <el-button type="danger" size="mini">删除</el-button>
+        <el-button type="danger" size="mini" @click="dialogVisible = true">删除</el-button>
       </div>
     </el-col>
+
+    <el-dialog
+      title="删除"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <span>确认删除</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteArticle">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-row>
 </template>
 
 <script>
+import { DeleteArticle } from "../api/api"
+
 export default {
   data() {
     return {
+      dialogVisible: false
     }
   },
 
@@ -66,6 +79,17 @@ export default {
       this.$router.push({
         path: "/NewArticle"
       })
+    },
+
+    deleteArticle() {
+      DeleteArticle(this.articleInfo._id)
+      .then(res => {
+        this.$message.success("删除成功")
+      })
+      .catch(() => {
+        this.$message.error("删除失败")
+      })
+      this.dialogVisible = false
     }
   }
 };

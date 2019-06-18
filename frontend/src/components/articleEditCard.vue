@@ -74,7 +74,7 @@ import { GetArticle, NewArticle } from "../api/api"
 import { GetClasses, GetSecondClass } from "../api/api"
 
 export default {
-    data() {
+  data() {
     return {
       aid: "",
       articleInfo: {
@@ -97,21 +97,6 @@ export default {
       if (!this.$store.state.hasLogin || !this.$store.state.isAdmin) {
         this.$router.push({
           path: "/Forbidden"
-        })
-      }
-
-      this.aid = this.$route.params.article_id
-      if (this.aid) {
-        GetArticle(this.aid)
-        .then(res => {
-          this.articleInfo = res.data 
-        })
-        .catch(() => {
-          this.$message({
-            message: "错误",
-            type: "error",
-            duration: 1500
-          })
         })
       }
 
@@ -190,7 +175,6 @@ export default {
     },
 
     submitEdit() {
-      console.log(this.articleInfo.secondClass)
       if (!this.articleInfo.title || !this.articleInfo.description ||
           !this.articleInfo.firstClass || !this.articleInfo.secondClass ||
           !this.articleInfo.content) {

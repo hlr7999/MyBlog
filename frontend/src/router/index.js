@@ -67,11 +67,6 @@ export default new Router({
       component: ArticleEdit
     },
     {
-      path: '/ModifyArticle/:article_id',
-      name: 'ArticleEdit',
-      component: ArticleEdit
-    },
-    {
       path: '/Like',
       name: 'LikeList',
       component: LikeList
