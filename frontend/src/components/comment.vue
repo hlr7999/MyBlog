@@ -22,8 +22,8 @@
           </div>
         </div>
         <el-row class="commentSendBox">
-          <el-col :span="24" class="commentSendBtn" :onclick="sendComment">
-            {{ sendTip }}
+          <el-col :span="24" class="commentSendBtn">
+            <div @click="sendComment">{{ sendTip }}</div>
           </el-col>
         </el-row>
       </div>
@@ -42,51 +42,23 @@
               <section>
                 <p v-html="analyzeEmoji(item.content)">{{analyzeEmoji(item.content)}}</p>
                 <div
-                  v-if="haslogin"
-                  class="replyBtn"
-                  @click="replyComment(item.id)"
-                >回复</div>
+                  v-if="$store.state.hasLogin && 
+                        $store.state.userInfo.userId == item.uid"
+                  class="deleteBtn"
+                  @click="deleteComment(item._id)"
+                >删除</div>
               </section>
             </div>
-            <ul v-show="item.sonComment" class="commentContentList" style="padding-left:60px;">
-              <li
-                class="commentContentListItem"
-                v-for="(item,index) in item.sonComment"
-                :key="index"
-              >
-                <div class="commentItem">
-                  <header>
-                    <img :src="item.avatar">
-                    <div class="i-name">
-                      {{item.username}}
-                      <span>回复</span>
-                      {{item.reply_name}}
-                    </div>
-                    <div class="i-time">{{ item.time }}</div>
-                  </header>
-                  <section>
-                    <p v-html="analyzeEmoji(item.content)">{{item.content}}</p>
-                    <div
-                      v-show="haslogin"
-                      class="replyBtn"
-                      @click="replyComment(item.comment_id)"
-                    >回复</div>
-                  </section>
-                </div>
-              </li>
-            </ul>
           </li>
         </ul>
-        <div class="viewmore">
-          <h1 v-show="hasMore" class="viewMoreBtn" @click="addMoreFun">查看更多</h1>
-          <h1 v-show="!hasMore" class="viewMoreBtn">没有更多</h1>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { GetComments, NewComment, DeleteComment } from "../api/api"
+
 export default {
   name: "comment",
 
@@ -98,14 +70,7 @@ export default {
       commentText: "",
       isEmojiOpen: true, 
       commentList: "",
-      pageId: 0,
       aid: 0,
-      hasMore: true,
-      haslogin: false,
-      userId: "",
-      // leaveId: 0,
-      // leavePid: "",
-      // pid: "",
       sendTip: "发送",
       emojilist: [
         { title: "微笑", url: "weixiao.gif" },
@@ -183,9 +148,22 @@ export default {
       ]
     };
   },
+
   methods: {
     getData() {
-      this.commentList = []
+      if (this.$route.params.article_id) {
+        this.aid = this.$route.params.article_id
+      } else {
+        this.aid = "aboutMe"
+      }
+
+      GetComments(this.aid)
+      .then(res => {
+        this.commentList = res.data
+      })
+      .catch(() => {
+        this.$message.error("获取评论失败")
+      })
     },
 
     choseEmoji: function(inner) {
@@ -193,71 +171,60 @@ export default {
     },
 
     analyzeEmoji: function(cont) {
-      var pattern1 = /\[[\u4e00-\u9fa5]+\]/g;
-      var pattern2 = /\[[\u4e00-\u9fa5]+\]/;
-      var content = cont.match(pattern1);
-      var str = cont;
+      var pattern1 = /\[[\u4e00-\u9fa5]+\]/g
+      var pattern2 = /\[[\u4e00-\u9fa5]+\]/
+      var content = cont.match(pattern1)
+      var str = cont
       if (content) {
         for (var i = 0; i < content.length; i++) {
           for (var j = 0; j < this.emojilist.length; j++) {
             if ("[" + this.emojilist[j].title + "]" == content[i]) {
-              var src = this.emojilist[j].url;
-              break;
+              var src = this.emojilist[j].url
+              break
             }
           }
           str = str.replace(
             pattern2,
             '<img src="static/img/emoji/' + src + '"/>'
-          );
+          )
         }
       }
-      return str;
+      return str
     },
 
-    //发送留言
-    sendComment: function() {
-      //留言
+    sendComment() {
+      if (!this.$store.state.hasLogin) {
+        this.$confirm("登录才可评论，是否前往登录页面?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+        .then(() => {
+          this.$router.push("/Login")
+        })
+        .catch(() => {})
+        return
+      }
+
       var that = this
-      console.log(this.commentText)
       if (this.commentText) {
-        this.sendTip = "发送中";
-        // if (that.leaveId == 0) {
-        //   setcommentItemComment(
-        //     that.textarea,
-        //     that.userId,
-        //     that.aid,
-        //     that.leavePid,
-        //     that.pid,
-        //     function(msg) {
-        //       //   console.log(msg);
-        //       that.textarea = "";
-        //       that.routeChange();
-        //       that.removeRespond();
-        //       var timer02 = setTimeout(function() {
-        //         that.sendTip = "发送~";
-        //         clearTimeout(timer02);
-        //       }, 1000);
-        //     }
-        //   );
-        // } else {
-        //   //其他模块留言回复
-        //   setOuthComment(
-        //     that.textarea,
-        //     that.userId,
-        //     that.aid,
-        //     that.leaveId,
-        //     that.leavePid,
-        //     that.pid,
-        //     function(msg) {
-        //       //   console.log(msg);
-        //       that.textarea = "";
-        //       that.removeRespond();
-        //       that.routeChange();
-        //     }
-        //   );
-        // }
+        this.sendTip = "发送中"
+        NewComment(this.aid, this.commentText)
+        .then(res => {
+          this.$message.success("评论成功")
+          GetComments(this.aid)
+          .then(res => {
+            this.commentList = res.data
+          })
+          .catch(() => {
+            this.$message.error("获取评论失败")
+          })
+        })
+        .catch(() => {
+          this.$message.error("评论失败")
+        })
+
         this.commentText = ""
-        this.getData()
         var timer = setTimeout(function() {
           that.sendTip = "发送"
           clearTimeout(timer)
@@ -265,44 +232,29 @@ export default {
       } else {
         this.sendTip = "内容不能为空"
         this.commentText = ""
-        this.getData()
         var timer = setTimeout(function() {
           that.sendTip = "发送"
           clearTimeout(timer)
-        }, 3000)
+        }, 1000)
       }
-      console.log(this.sendTip)
     },
 
-    replyComment: function(leavePid, pid) {
-      //回复留言
-      // console.log(leavePid,pid);
-      // var that = this;
-      // if (localStorage.getItem("userInfo")) {
-      //   var dom = event.currentTarget;
-      //   dom = dom.parentNode;
-      //   this.leavePid = leavePid;
-      //   this.pid = pid;
-      //   dom.appendChild(this.$refs.commenInputBox);
-      // } else {
-      //   that
-      //     .$confirm("登录后即可点赞和收藏，是否前往登录页面?", "提示", {
-      //       confirmButtonText: "确定",
-      //       cancelButtonText: "取消",
-      //       type: "warning"
-      //     })
-      //     .then(() => {
-      //       //确定，跳转至登录页面
-      //       //储存当前页面路径，登录成功后跳回来
-      //       localStorage.setItem("logUrl", that.$route.fullPath);
-      //       that.$router.push({ path: "/Login?login=1" });
-      //     })
-      //     .catch(() => {});
-      // }
-    },
-
-    addMoreFun: function() {
-      
+    deleteComment(id) {
+      console.log(id)
+      DeleteComment(id)
+      .then(res => {
+        this.$message.success("删除成功")
+        GetComments(this.aid)
+        .then(res => {
+          this.commentList = res.data
+        })
+        .catch(() => {
+          this.$message.error("获取评论失败")
+        })
+      })
+      .catch(() => {
+        this.$message.error("删除失败")
+      })
     }
   },
   
@@ -911,11 +863,11 @@ export default {
   vertical-align: middle;
 }
 
-.commenBox .commentContentListItem .commentItem section .replyBtn {
+.commenBox .commentContentListItem .commentItem section .deleteBtn {
   display: inline-block;
   margin: 10px 0;
   font-size: 12px;
-  color: #64609e;
+  color: red;
   cursor: pointer;
 }
 </style>

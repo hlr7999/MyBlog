@@ -25,7 +25,7 @@
         </span>
       </h2>
       <div class="classLabel">
-        <a :href="'#/Class/'+articleInfo.classId">{{articleInfo.className}}</a>
+        <div>{{articleInfo.className}}</div>
       </div>
     </header>
 
@@ -83,12 +83,14 @@ export default {
       .catch(() => {
         this.$message.error("错误")
       })
-
-      IsLikeCollect(this.aid)
-      .then(res => {
-        this.likeArt = res.data.isLike
-        this.collectArt = res.data.isCollect
-      })
+      
+      if (this.$store.state.hasLogin) {
+        IsLikeCollect(this.aid)
+        .then(res => {
+          this.likeArt = res.data.isLike
+          this.collectArt = res.data.isCollect
+        })
+      }
     },
 
     likecollectHandle: function(islike) {
@@ -129,11 +131,9 @@ export default {
           type: "warning"
         })
         .then(() => {
-          this.$router.push("/Login");
+          this.$router.push("/Login")
         })
-        .catch(() => {
-
-        });
+        .catch(() => {})
       }
     },
 

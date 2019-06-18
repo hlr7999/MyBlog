@@ -29,7 +29,7 @@
           </span>
         </h2>
         <div class="classLabel">
-          <a :href="'#/Class/'+articleInfo.classId">{{articleInfo.className}}</a>
+          <div>{{articleInfo.className}}</div>
         </div>
       </header>
       <div class="article-content">

@@ -245,6 +245,39 @@ const DeleteClass = function(id) {
     })
 }
 
+// get comments
+const GetComments = function(id) {
+    return axios.get(baseUrl + "comments/" + id)
+}
+
+// new comment
+const NewComment = function(aid, content) {
+    return axios({
+        method: "POST",
+        url: baseApi + "comments/" + aid,
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            "content": content
+        }
+    })
+}
+
+// delete comment
+const DeleteComment = function(id) {
+    return axios({
+        method: "DELETE",
+        url: baseApi + "comments",
+        headers: {
+            "Authorization": "Bearer " + store.state.userInfo.userToken
+        },
+        data: {
+            "id": id
+        }
+    })
+}
+
 export {
     UserLogin,
     UserRegister,
@@ -267,5 +300,8 @@ export {
     GetSecondClass,
     NewFirstClass,
     NewSecondClass,
-    DeleteClass
+    DeleteClass,
+    GetComments,
+    NewComment,
+    DeleteComment
 }
