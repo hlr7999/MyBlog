@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="articleItem" v-for="article in articles" :key="article._id">
-      <admin-article-card v-if="type == 1" :articleInfo="article"></admin-article-card>
+      <admin-article-card 
+        v-if="type == 1" 
+        :articleInfo="article" 
+        v-on:changeData="getData"></admin-article-card>
       <article-card v-else :articleInfo="article"></article-card>
     </div>
     <el-pagination
@@ -81,6 +84,9 @@ export default {
         }
       }
 
+      this.totalArticles = []
+      this.articles = []
+      this.totalNum = 0
       GetHomeArticles()
       .then(res => {
         if (this.type == 1) {

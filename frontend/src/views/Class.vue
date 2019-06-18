@@ -5,12 +5,12 @@
   <div class="container">
     <div class="classTitle">
       <div class="classLabel" >
-        <a :href="'#/Class/'+class_id">{{class_name}}</a>
+        <a :href="'#/Class/'+class_id">{{className}}</a>
       </div>
       <ul v-if="sonclassList" class="sonclassTitle" >
         <li v-for="(item,index) in sonclassList" :key="index">
-          <a :href="'#/Class/'+class_id+'/'+item.id" 
-            :class="item.id == son_class_id ? 'active' : ''">{{item.name}}</a>
+          <a :href="'#/Class/'+class_id+'/'+item._id" 
+            :class="item._id == son_class_id ? 'active' : ''">{{item.name}}</a>
         </li>
       </ul>
     </div>
@@ -18,13 +18,6 @@
     <div class="articleItem" v-for="article in articles" :key="article.id">
       <article-card :articleInfo="article"></article-card>
     </div>
-    <el-pagination
-      @current-change="handleCurrentChange"
-      :current-page.sync="currentPage"
-      :page-size="9"
-      layout="total, prev, pager, next"
-      :total="totalNum">
-    </el-pagination>
   </div>
 
   <blog-footer></blog-footer>
@@ -36,57 +29,26 @@ import header from "../components/header.vue"
 import articleCard from "../components/articleCard.vue" 
 import footer from "../components/footer.vue"
 
+import { GetSecondClass, GetArticlesById } from "../api/api"
+
 export default {
   name: 'home',
+
   components: {
     'blog-header': header,
     'article-card': articleCard,
     'blog-footer': footer
   },
+
   data() {
     return {
-      sonclassList: [{
-          id: "00",
-          name: "Vue.js"
-        },{
-          id: "11",
-          name: "Golang"
-        }
-      ],
-      articles: [{
-        id: "fuck1",
-        title: "Vue.js搭建博客",
-        year: 2019,
-        month: 5,
-        day: 25,
-        browse_count: 77,
-        comment_count: 77,
-        like_count: 77,
-        collect_count: 77,
-        class_id: 0,
-        class_name: "Vue.js",
-        description: "Vue.js搭建博客",
-        image: "/static/img/vuelogo.jpg"
-      },{
-        id: "fuck2",
-        title: "Vue.js搭建博客",
-        year: 2019,
-        month: 5,
-        day: 25,
-        browse_count: 77,
-        comment_count: 77,
-        like_count: 77,
-        collect_count: 77,
-        class_id: 0,
-        class_name: "Vue.js",
-        description: "Vue.js搭建博客",
-        image: "/static/img/vuelogo.jpg"
-      }],
-      currentPage: this.$store.state.currentPage,
+      sonclassList: [],
+      articles: [],
+      currentPage: 1,
       totalNum: 2,
       class_id: "0",
       son_class_id: "0",
-      class_name: ""
+      className: ""
     }
   },
 
@@ -94,11 +56,32 @@ export default {
     getData() {
       this.class_id = this.$route.params.class_id
       this.son_class_id = this.$route.params.son_class_id
-      this.class_name = "技术分享"
-    },
 
-    handleCurrentChange() {
-
+      for (let item of this.$store.state.classList) {
+        if (item._id == this.class_id) {
+          this.className = item.name
+          break
+        }
+      }
+      
+      GetSecondClass(this.class_id)
+      .then(res => {
+        this.sonclassList = res.data
+      })
+      .catch(() => {
+        this.$message.error("获取分类失败")
+      })
+      var classId = this.class_id
+      if (this.son_class_id) {
+        classId = this.son_class_id
+      }
+      GetArticlesById(classId)
+      .then(res => {
+        this.articles = res.data
+      })
+      .catch(() => {
+        this.$message.error("获取文章失败")
+      })
     }
   },
 

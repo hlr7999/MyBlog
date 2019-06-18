@@ -85,6 +85,7 @@ export default {
       DeleteArticle(this.articleInfo._id)
       .then(res => {
         this.$message.success("删除成功")
+        this.$emit("changeData")
       })
       .catch(() => {
         this.$message.error("删除失败")

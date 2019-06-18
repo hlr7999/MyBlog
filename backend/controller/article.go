@@ -17,6 +17,7 @@ import (
 func InitArticleNotAuth(e *echo.Echo) error {
 	e.GET("/articles", getAllArticles)
 	e.GET("/articles/:id", getArticle)
+	e.GET("/articles/class/:id", getArticlesByClass)
 	return nil
 }
 
@@ -36,6 +37,42 @@ func getAllArticles(c echo.Context) error {
 	}
 
 	return app.Ok(c, articles)
+}
+
+func getArticlesByClass(c echo.Context) error {
+	collection := app.DB().C(model.ArticleC)
+	cc := app.DB().C(model.ClassC)
+	// get class
+	id := c.Param("id")
+	var class model.Class
+	err := cc.FindId(bson.ObjectIdHex(id)).One(&class)
+	if err != nil {
+		return app.BadRequest(c, err.Error())
+	}
+	// get articles
+	if class.Level == model.FirstLevel {
+		query := make([]bson.M, len(class.Child))
+		for i, item := range class.Child {
+			query[i] = bson.M{"classId": item}
+		}
+		var articles []model.Article
+		if (len(query) > 0) {
+			err = collection.Find(bson.M{"$or": query}).All(&articles)
+			if err != nil {
+				return app.BadRequest(c, err.Error())
+			}
+		}
+
+		return app.Ok(c, articles)
+	} else {
+		var articles []model.Article
+		err = collection.Find(bson.M{"classId": id}).All(&articles)
+		if err != nil {
+			return app.BadRequest(c, err.Error())
+		}
+
+		return app.Ok(c, articles)
+	}
 }
 
 func getArticle(c echo.Context) error {
@@ -154,8 +191,17 @@ func deleteArticle(c echo.Context) error {
 	// get article id
 	id := c.Param("id")
 
-	// delete article
-	err := collection.Remove(
+	// delete article content and article
+	var article model.Article
+	err := collection.FindId(bson.ObjectIdHex(id)).One(&article)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	err = os.Remove(article.Content)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	err = collection.Remove(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	)
 	if err != nil {

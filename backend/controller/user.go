@@ -292,7 +292,21 @@ func deleteUser(c echo.Context) error {
 	if id == token.ID {
 		return app.BadRequest(c, "Bad Request")
 	}
-	err := collection.Remove(
+	// delete avatar and user
+	var user model.User
+	err := collection.FindId(bson.ObjectIdHex(token.ID)).One(&user)
+	if err != nil {
+		return app.ServerError(c, err)
+	}
+	avatars := strings.Split(user.Avatar, "/")
+	avatar := avatars[len(avatars) - 1]
+	if avatar != "default.jpg" && avatar != "admin.jpg" {
+		err = os.Remove(config.ImagePath + "avatar/" + avatar)
+		if err != nil {
+			return app.ServerError(c, err)
+		}
+	}
+	err = collection.Remove(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	)
 	if err != nil {

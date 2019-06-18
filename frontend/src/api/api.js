@@ -31,6 +31,11 @@ const GetHomeArticles = function() {
     return axios.get(baseUrl + "articles")
 }
 
+// get articles by id
+const GetArticlesById = function(id) {
+    return axios.get(baseUrl + "articles/class/" + id)
+}
+
 // get article
 const GetArticle = function(id) {
     return axios.get(baseUrl + "articles/" + id)
@@ -245,6 +250,7 @@ export {
     UserRegister,
     AboutMe,
     GetHomeArticles,
+    GetArticlesById,
     GetArticle,
     DeleteArticle,
     GetLCArticles,
