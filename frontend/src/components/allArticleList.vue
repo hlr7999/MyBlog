@@ -94,14 +94,10 @@ export default {
             _id : "x",
             newArticle: true
           })
-          this.totalNum = 1
         }
         if (res.data) {
           this.totalArticles = this.totalArticles.concat(res.data)
-          this.totalNum += this.totalArticles.length
-          for (let a of this.totalArticles) {
-
-          }
+          this.totalNum = this.totalArticles.length
         }
         this.articles = this.totalArticles.slice(
           (this.currentPage - 1) * 9,

@@ -15,7 +15,7 @@ export default new Vuex.Store({
       userId: "",
       userAvatar: ""
     },
-    host: "http://localhost:2333/",
+    host: "http://47.100.225.59:2333/",
     classList: []
   },
 

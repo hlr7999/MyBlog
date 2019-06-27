@@ -144,9 +144,9 @@ export default {
   width: 100%!important;
 }
 
-.login .el-form .el-form-item.passwordItem {
+/* .login .el-form .el-form-item.passwordItem {
   margin-bottom: 0;
-}
+} */
 /* 
 .login .el-form .el-form-item.forget {
   text-align: right!important;

@@ -126,7 +126,7 @@ export default {
     },
 
     startBtn() {
-      window.location.href = 'http://localhost/start'
+      window.location.href = 'http://47.100.225.59/start'
     },
 
     loginBtn(t) {

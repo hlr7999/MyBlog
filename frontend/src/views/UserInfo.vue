@@ -138,12 +138,10 @@ export default {
 
       UploadAvatar(form)
       .then(res => {
-        this.userInfo.avatar = "http://localhost/img/avatar/admin.jpg"
         this.userInfo.avatar = res.data
         var user = JSON.parse(localStorage.getItem("currentUser"))
         user.avatar = res.data
         localStorage.setItem("currentUser", JSON.stringify(user))
-        this.$store.commit("changeAvatar", "http://localhost/img/avatar/admin.jpg")
         this.$store.commit("changeAvatar", res.data)
         this.$message({
           message: "上传成功",

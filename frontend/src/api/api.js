@@ -1,8 +1,8 @@
 import axios from 'axios'
 import store from '../store'
 
-var baseUrl = "http://localhost:2333/"
-var baseApi = "http://localhost:2333/api/"
+var baseUrl = "http://47.100.225.59:2333/"
+var baseApi = "http://47.100.225.59:2333/api/"
 
 // login
 const UserLogin = function(data) {

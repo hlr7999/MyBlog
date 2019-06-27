@@ -70,7 +70,7 @@ ul {
   color:#fff;
 }
 
-.classLabel ::after {
+.classLabel::after {
   position: absolute;
   content: '';
   top:100%;

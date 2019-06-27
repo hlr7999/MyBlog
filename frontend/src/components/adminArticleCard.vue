@@ -93,7 +93,7 @@ export default {
       this.dialogVisible = false
     }
   }
-};
+}
 </script>
 
 <style>
@@ -106,14 +106,14 @@ export default {
   cursor: pointer;
 }
 
-.classLabel  {
-left:-18px!important;
-padding-left:18px!important;
-}
+/* .classLabel  {
+  left:-18px!important;
+  padding-left:18px!important;
+} */
 
-.classLabel ::after{
-border:none!important;
-}
+/* .classLabel::after{
+  border:none!important;
+} */
 
 .btnBox {
   text-align: center;
