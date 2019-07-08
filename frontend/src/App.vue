@@ -272,7 +272,7 @@ a {
     left:-18px!important;
     padding-left:18px!important;
   }
-  .classLabel ::after{
+  .classLabel::after{
     border:none!important;
   }
 }
