@@ -108,7 +108,7 @@ export default {
         }
       })
       .catch(() => {
-        this.$message({
+        this.$message.error({
           message: "未知错误",
           type: "error",
           duration: 1500

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/globalsign/mgo"
 	"github.com/labstack/echo"
 	"github.com/globalsign/mgo/bson"
 	"net/http"
@@ -29,7 +30,7 @@ func InitUserAuth(g *echo.Group) {
 	g.DELETE("/users/:id", deleteUser)
 	g.POST("/isLikeCollect", isLikeCollect)
 	g.POST("/users/likeCollect/:id", doLikeCollect)
-	g.GET("/users/likeCollect/:id", getLikeCollect)
+	g.POST("/users/getLikeCollect/:id", getLikeCollect)
 }
 
 type LoginRequest struct {
@@ -495,23 +496,47 @@ func getLikeCollect(c echo.Context) error {
 	}
 	if isLike.IsLike == 1 {
 		articles := make([]model.Article, len(ulcList.LikeList))
+		index := 0
 		for i, item := range ulcList.LikeList {
-			err = Ac.FindId(item).One(&articles[i])
+			err = Ac.FindId(item).One(&articles[i-index])
 			if err != nil {
-				return app.ServerError(c, err)
+				if err == mgo.ErrNotFound {
+					index += 1
+					err = collection.Update(
+						bson.M{"_id": bson.ObjectIdHex(id)},
+						bson.M{"$pull": bson.M{"likeList": item}},
+					)
+					if err != nil {
+						return app.ServerError(c, err)
+					}
+				} else {
+					return app.ServerError(c, err)
+				}
 			}
 		}
-
-		return app.Ok(c, articles)
+		len := len(ulcList.LikeList) - index
+		return app.Ok(c, articles[0:len])
 	} else {
 		articles := make([]model.Article, len(ulcList.CollectList))
+		index := 0
 		for i, item := range ulcList.CollectList {
 			err = Ac.FindId(item).One(&articles[i])
 			if err != nil {
-				return app.ServerError(c, err)
+				if err == mgo.ErrNotFound {
+					index += 1
+					err = collection.Update(
+						bson.M{"_id": bson.ObjectIdHex(id)},
+						bson.M{"$pull": bson.M{"collectList": item}},
+					)
+					if err != nil {
+						return app.ServerError(c, err)
+					}
+				} else {
+					return app.ServerError(c, err)
+				}
 			}
 		}
-
-		return app.Ok(c, articles)
+		len := len(ulcList.CollectList) - index
+		return app.Ok(c, articles[0:len])
 	}
 }

@@ -63,8 +63,8 @@ const GetLCArticles = function(r) {
     }
 
     return axios({
-        method: "GET",
-        url: baseApi + "users/likeCollect/" + store.state.userInfo.userId,
+        method: "POST",
+        url: baseApi + "users/getLikeCollect/" + store.state.userInfo.userId,
         headers : {
             "Authorization": "Bearer " + store.state.userInfo.userToken
         },

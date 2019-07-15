@@ -8,7 +8,7 @@
 
     <el-col :lg="5" :md="5" :sm="6" :xs="6">
       <div @click="homeBtn"  class="headerLogo">
-        <i class="el-icon-watermelon"></i>MyBlog
+        <i class="el-icon-watermelon"></i>HLRBlog
       </div>
     </el-col>
 
@@ -120,7 +120,7 @@
         </el-menu>
       </el-collapse-transition>
       <div @click="homeBtn" class="mobileHeaderLogo">
-        <i class="el-icon-watermelon"></i>MyBlog
+        <i class="el-icon-watermelon"></i>HLRBlog
       </div>
     </div>
   </div>
