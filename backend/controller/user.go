@@ -208,7 +208,7 @@ func uploadAvatar(c echo.Context) error {
 	}
 	oldAvatars := strings.Split(user.Avatar, "/")
 	oldAvatar := oldAvatars[len(oldAvatars) - 1]
-	if oldAvatar != "default.jpg" {
+	if oldAvatar != "default.jpg" && oldAvtar != "admin.jpg" {
 		err = os.Remove(config.ImagePath + "avatar/" + oldAvatar)
 		if err != nil {
 			return app.ServerError(c, err)
